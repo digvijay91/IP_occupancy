@@ -3,7 +3,7 @@ from time import strftime
 from datetime import *
 from dateutil.relativedelta import relativedelta
 from django.http import HttpResponse
-
+from django.utils import simplejson
 import pycurl
 import json
 import StringIO
@@ -37,4 +37,4 @@ def home(request):
  c.perform()
  api_data = b.getvalue()
  # api_data = json.loads(api_data)
- return HttpResponse("%s" %api_data)
+ return HttpResponse(api_data, mimetype = 'application/json')
