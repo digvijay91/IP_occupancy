@@ -6,6 +6,6 @@ IP_occupancy
 
 3) Type the following commands 
           'python manage.py syncdb'
-          'python managne.py runserver'
+          'python manage.py runserver'
 
 4) The app will run on 127.0.01:8000 (or whatever is your localhost address)
