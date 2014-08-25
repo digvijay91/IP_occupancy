@@ -20,7 +20,7 @@ def home(request):
  ### END - Code to read token - END ###
  current_time = datetime.now()
  current_time=current_time.strftime("%Y-%m-%d-%H:%M:%S")
- api_data_url = "https://192.168.1.40:9119/count?at="+current_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr&token="+auth_token
+ api_data_url = "https://192.168.1.40:9119/count?at="+current_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=b&token="+auth_token
  c = pycurl.Curl()
  c.setopt(pycurl.URL, api_data_url)
  c.setopt(pycurl.SSL_VERIFYPEER, 0)
