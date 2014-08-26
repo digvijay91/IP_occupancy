@@ -81,3 +81,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# #! /usr/bin/python
+# from django.conf import settings
+# settings.configure()
+# from django.core.management import call_command
+
+# call_command('get_token')
