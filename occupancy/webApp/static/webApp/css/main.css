@@ -1,0 +1,134 @@
+html,body,div{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+html,body{
+  height: 100%;
+  width: 100%;
+}
+body{
+  height:100%;
+  width:100%;
+  min-height:600px;
+  min-width:1000px;
+  max-height:700px;
+/*  background:blue;
+  overflow:hidden;*/
+}
+#all-container{
+  width:1000px;
+  min-height:600px;
+  margin: 0 auto;
+/*overflow:hidden;*/
+}
+#header-div{
+  background-color: red;
+  height:100px;
+  width:100%;
+}
+#main-container{
+/* background-color:green;*/
+/*  height:100%;*/
+  width:100%;
+/*  overflow:hidden;*/
+  display:block;
+}
+#left-column{
+  width:0px;
+  height:100%;
+/*  background:orange;*/
+  float:left;
+}
+#middle-column{
+  height:100%;
+  width:700px;
+  display:inline-block;
+  background:brown;
+}
+#right-column{
+  height:100%;
+  width:250px;
+/*  background:#e6e6e6;*/
+  float:right;
+}
+#chart-building{
+  height:210px;
+  width:330px;
+}
+#chart-building svg{
+  width:300px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-left:2px;
+  padding-bottom:2px;
+  border:1px solid white;
+}
+#chart-floor{
+  height:210px;
+  width:330px;
+}
+#chart-floor svg{
+  width:300px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding:2px;
+  border:1px solid white;
+}
+#chart-wing{
+  height:210px;
+  width:330px;
+}
+#chart-wing svg{
+  width:300px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding:2px;
+  border:1px solid white;
+}
+.chart-title{
+  font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+  text-align: center;
+  position:relative;
+  top:110px;
+  width:200px;
+}
+#building-helper{
+  font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+  text-align:left;
+  font-size:15px;
+  width:150px;
+  float:left;
+  line-height:20px;
+  vertical-align:middle;
+  height:20px;
+  margin-left:10px;
+  border-right:1px solid white;
+}
+#top-row{
+  height:20px;
+  width:100%;
+  background:orange;
+}
+#floor-helper{
+  font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+  text-align:left;
+  font-size:15px;
+  width:150px;
+  display:inline-block;
+  vertical-align:middle;
+  height:20px;
+  line-height:20px;
+  margin-left:5px;
+  border-right:1px solid white;
+}
+#wing-helper{
+  font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+  text-align:left;
+  font-size:15px;
+  width:150px;
+  display:inline-block;
+  vertical-align:middle;
+  height:20px;
+  margin-left:5px;
+  border-right:1px solid white;
+  line-height:20px;
+}
+
