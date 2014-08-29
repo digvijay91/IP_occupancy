@@ -4,7 +4,7 @@ from webApp import views
 
 
 urlpatterns = patterns('',
-    url(r'^chart/',TemplateView.as_view(template_name = "index.html")),
+    url(r'^chart/',views.index,name="index"),
     
 )
 
