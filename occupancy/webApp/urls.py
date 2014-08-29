@@ -1,7 +1,8 @@
-from django.conf.urls import url
-
+from django.conf.urls import patterns,url
+from django.views.generic import TemplateView
 from webApp import views
 
-urlpatterns = [
-    url(r'^$', views.home, name='home'),
-]
+urlpatterns = patterns('',
+    url(r'^chart/',TemplateView.as_view(template_name = "index.html")),
+    url(r'^$',views.home),
+)
