@@ -6,10 +6,12 @@
   <script type="text/javascript" src="../../static/webApp/js/d3.js"></script>
   <script type="text/javascript" src="../../static/webApp/js/dc.js"></script>
   <script type="text/javascript" src="../../static/webApp/js/my.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/webApp/css/dc.css" media="screen" /> 
-<link rel="stylesheet" type="test/css" href="/static/webApp/css/main.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="../../static/webApp/css/dc.css" media="screen" /> 
+<link rel="stylesheet" type="test/css" href="../../static/webApp/css/main.css" media="screen"/>
 </head>
+<input type = "hidden" id = "api_data" value = "{{ api_data }}">
 <body>
+<!-- {{api_data}} -->
 <div id="all-container">
   <!--div id="header-div">Header</div-->
   <div id="main-container">
@@ -26,7 +28,7 @@
       <div id="chart-building">
         <div class="chart-title">Building
         </div>
-     </div>
+      </div>
       <div id="chart-floor"><div class="chart-title">Floor</div></div>
       <div id="chart-wing"><div class="chart-title">Wing</div></div>
     </div>
