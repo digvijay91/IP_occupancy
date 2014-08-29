@@ -1,8 +1,10 @@
-from django.conf.urls import url
-
+from django.conf.urls import patterns,url
+from django.views.generic import TemplateView
 from webApp import views
 
-urlpatterns = [
-    # url(r'^home$', views.home, name='home'),
-    url(r'^index$', views.index, name ="index")
-]
+
+urlpatterns = patterns('',
+    url(r'^chart/',TemplateView.as_view(template_name = "index.html")),
+    
+)
+
