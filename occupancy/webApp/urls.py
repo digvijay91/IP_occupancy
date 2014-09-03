@@ -5,6 +5,7 @@ from webApp import views
 
 urlpatterns = patterns('',
     url(r'^chart/',views.index,name="index"),
+    url(r'^past/(?P<time>.+)$',views.past_week_data, name = "past_week_data"),
     
 )
 

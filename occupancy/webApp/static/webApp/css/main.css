@@ -17,9 +17,9 @@ body{
   overflow:hidden;*/
 }
 #all-container{
-  width:1000px;
-  min-height:600px;
-  margin: 0 auto;
+  width:1150px;
+  min-height:100%;
+  margin: 0;
 /*overflow:hidden;*/
 }
 #header-div{
@@ -34,27 +34,28 @@ body{
 /*  overflow:hidden;*/
   display:block;
 }
-#left-column{
+/*#left-column{
   width:0px;
   height:100%;
-/*  background:orange;*/
-  float:left;
-}
+  background:orange;
+  /*float:left;*/
+}*/
 #middle-column{
   height:100%;
-  width:700px;
+  width:450px;
   display:inline-block;
-  background:brown;
+  /*background:brown;*/
+  /*float:left;*/
 }
 #right-column{
   height:100%;
-  width:250px;
+  width:475px;
 /*  background:#e6e6e6;*/
   float:right;
 }
 #chart-building{
   height:210px;
-  width:330px;
+  width:300px;
 }
 #chart-building svg{
   width:300px;
@@ -64,8 +65,8 @@ body{
   border:1px solid white;
 }
 #chart-floor{
-  height:210px;
-  width:330px;
+  /*height:210px;*/
+  width:0px;
 }
 #chart-floor svg{
   width:300px;
@@ -75,10 +76,22 @@ body{
 }
 #chart-wing{
   height:210px;
-  width:330px;
+  width:300px;
 }
 #chart-wing svg{
-  width:300px;
+  width:275px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding:2px;
+  border:1px solid white;
+}
+
+#chart-room{
+  height:210px;
+  width:175px;
+}
+
+#chart-room svg{
+  width:320px;
   font-family: Arial, Helvetica, sans-serif;
   padding:2px;
   border:1px solid white;
@@ -97,15 +110,16 @@ body{
   width:150px;
   float:left;
   line-height:20px;
-  vertical-align:middle;
+  vertical-align:left;
   height:20px;
   margin-left:10px;
   border-right:1px solid white;
 }
 #top-row{
   height:20px;
-  width:100%;
+  width:650px;
   background:orange;
+  /*float:left;*/
 }
 #floor-helper{
   font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
@@ -113,13 +127,26 @@ body{
   font-size:15px;
   width:150px;
   display:inline-block;
-  vertical-align:middle;
+  vertical-align:left;
   height:20px;
   line-height:20px;
   margin-left:5px;
   border-right:1px solid white;
 }
 #wing-helper{
+  font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+  text-align:left;
+  font-size:15px;
+  width:150px;
+  display:inline-block;
+  vertical-align:middle;
+  height:20px;
+  margin-left:5px;
+  border-right:1px solid white;
+  line-height:20px;
+}
+
+#room-helper{
   font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
   text-align:left;
   font-size:15px;
