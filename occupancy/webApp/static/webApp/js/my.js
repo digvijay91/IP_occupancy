@@ -69,13 +69,49 @@ function wing_helper(chart,filter){
     elem.innerHTML= "Wing: "+ sum; 
     curr_floor = sum;
 };
+
+function displaychart(){
+  d3.csv("/template/past/2014-09-02-10:10:10", function(error, data){
+      console.log(data);
+      var ndx = crossfilter(data);
+      var dayDim = ndx.dimension(function(d) {return d.day;});
+      var day_count = dayDim.group().reduceSum(function(d){return d.count;});
+      var past_linechart = dc.barChart("#past-linechart");
+      console.log(day_count.top(1)[0].value);
+
+      past_linechart
+      .xUnits(dc.units.ordinal)
+      //.xUnits(d3.time.hours)
+      //.xUnits(dc.units.ordinal)
+      .width(1000).height(300)
+      .dimension(dayDim)
+      .group(day_count)
+       // .x(d3.time.scale().domain([minDate,maxDate]))
+      .x(d3.scale.ordinal().domain(["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]))
+      .y(d3.scale.linear())
+      //.brushOn(false)
+      .xAxisLabel("Date")
+      .yAxisLabel("People in campus on average")
+      .transitionDuration(500)
+      .centerBar(true)    
+      .gap(65)
+      .elasticY(true)
+      .elasticX(true)
+      .xAxisPadding(10)
+      .xAxis().tickFormat();
+
+      dc.renderAll();
+  });
+}
 function myonload() {
+  displaychart();
   var api_data = document.getElementById("api_data").value;
   obj = JSON.parse(api_data);
   var ndx = crossfilter(obj.occupancy_information); 
   buildingDim = ndx.dimension(function(d){ return d.building;});
   var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
   var BuildingChart = dc.pieChart("#chart-building");
+  console.log(total_count.top(1)[0].value);
 
   floorDim = ndx.dimension(function(d){ if(d.floor == "") return "N/A"; return d.floor;});
   var floor_count = floorDim.group().reduceSum(function(d){return d.count;});

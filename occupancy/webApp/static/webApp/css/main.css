@@ -46,12 +46,27 @@ body{
   display:inline-block;
   /*background:brown;*/
   /*float:left;*/
+  margin: auto;
 }
 #right-column{
   height:100%;
   width:475px;
 /*  background:#e6e6e6;*/
-  float:right;
+  /*float:right;*/
+}
+
+#past-linechart{
+  height: 300px;
+  width: 900px;
+}
+
+#past-linechart svg{
+  width:900px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-left:2px;
+  padding-bottom:2px;
+  border:1px solid white;
+
 }
 #chart-building{
   height:210px;
