@@ -71,13 +71,37 @@ function wing_helper(chart,filter){
 };
 
 function displaychart(){
-  d3.csv("/template/past/2014-09-02-10:10:10", function(error, data){
-      console.log(data);
+  var current_time = new Date();
+  var month = parseInt(current_time.getMonth()) + 1;
+  current_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
+  console.log(current_time);
+  d3.csv("/template/past/"+current_time, function(error, data){
+
+      // console.log(data);
       var ndx = crossfilter(data);
       var dayDim = ndx.dimension(function(d) {return d.day;});
       var day_count = dayDim.group().reduceSum(function(d){return d.count;});
       var past_linechart = dc.barChart("#past-linechart");
-      console.log(day_count.top(1)[0].value);
+      buildingDim = ndx.dimension(function(d){ return d.building;});
+      var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
+      var BuildingChart = dc.pieChart("#chart-building");
+      // console.log(day_count.top(1)[0].value);
+      floorDim = ndx.dimension(function(d){ return d.floor;});
+      var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
+      FloorChart = dc.pieChart("#chart-floor");
+
+      wingDim = ndx.dimension(function(d){ if(d.wing == "") return "N/A";return d.wing;});
+      var wing_count = wingDim.group().reduceSum(function(d){return d.count;});
+      WingChart = dc.pieChart("#chart-wing");
+
+      classDim = ndx.dimension(function(d){ if(d.room == "") return "N/A"; return d.room;});
+      class_count = classDim.group().reduceSum(function(d){return d.count;});
+      classChart = dc.pieChart("#chart-room");
+
+      // document.getElementById("building-helper").innerHTML = "Building: " + all ;
+      // document.getElementById("floor-helper").innerHTML = "Floor: " + all ;
+      // document.getElementById("wing-helper").innerHTML = "Wing: " + all ;
+      // document.getElementById("room-helper").innerHTML = "Room: " + all ;
 
       past_linechart
       .xUnits(dc.units.ordinal)
@@ -86,6 +110,7 @@ function displaychart(){
       .width(1000).height(300)
       .dimension(dayDim)
       .group(day_count)
+      .filter("Thursday")
        // .x(d3.time.scale().domain([minDate,maxDate]))
       .x(d3.scale.ordinal().domain(["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]))
       .y(d3.scale.linear())
@@ -100,43 +125,89 @@ function displaychart(){
       .xAxisPadding(10)
       .xAxis().tickFormat();
 
+      BuildingChart
+        .width(200).height(200)
+        .dimension(buildingDim)
+        .group(total_count)
+        .innerRadius(50)
+        .renderLabel(true)
+        .label(function (d){
+          label = d.value;
+          return label;
+        })
+        .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
+        .ordinalColors(["#ffcccc", "#ff9999", "#ff6666", "#ff3333","#ff0000","#cc0000","#990000"]);
+
+        FloorChart
+          .width(200).height(200)
+          .dimension(floorDim)
+          .group(floor_count)
+          .innerRadius(50)
+          .renderLabel(true)
+          .label(function (d){ return d.value;})
+          //.label(buildingDim)
+          .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
+          .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"]);
+
+          WingChart
+            .width(200).height(200)
+            .dimension(wingDim)
+            .group(wing_count)
+            .innerRadius(50)
+            .renderLabel(true)
+            //.label(buildingDim)
+            .label(function (d){ return d.value;})
+            .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
+            .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
+
+            classChart
+             .width(200).height(200)
+             .dimension(classDim)
+             .group(class_count)
+             .innerRadius(50)
+             .renderLabel(true)
+             //.label(buildingDim)
+             .label(function (d){ return d.value;})
+             .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
+             .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
+
       dc.renderAll();
   });
 }
 function myonload() {
   displaychart();
-  var api_data = document.getElementById("api_data").value;
-  obj = JSON.parse(api_data);
-  var ndx = crossfilter(obj.occupancy_information); 
-  buildingDim = ndx.dimension(function(d){ return d.building;});
-  var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
-  var BuildingChart = dc.pieChart("#chart-building");
-  console.log(total_count.top(1)[0].value);
+  // var api_data = document.getElementById("api_data").value;
+  // obj = JSON.parse(api_data);
+  // var ndx = crossfilter(obj.occupancy_information); 
+  // buildingDim = ndx.dimension(function(d){ return d.building;});
+  // var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
+  // var BuildingChart = dc.pieChart("#chart-building");
+  // console.log(total_count.top(1)[0].value);
 
-  floorDim = ndx.dimension(function(d){ if(d.floor == "") return "N/A"; return d.floor;});
-  var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
-  FloorChart = dc.pieChart("#chart-floor");
-  console.log(FloorChart);
+  // floorDim = ndx.dimension(function(d){ if(d.floor == "") return "N/A"; return d.floor;});
+  // var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
+  // FloorChart = dc.pieChart("#chart-floor");
+  // console.log(FloorChart);
 
-  wingDim = ndx.dimension(function(d){ if(d.wing == "") return "N/A";return d.wing;});
-  var wing_count = wingDim.group().reduceSum(function(d){return d.count;});
-  WingChart = dc.pieChart("#chart-wing");
+  // wingDim = ndx.dimension(function(d){ if(d.wing == "") return "N/A";return d.wing;});
+  // var wing_count = wingDim.group().reduceSum(function(d){return d.count;});
+  // WingChart = dc.pieChart("#chart-wing");
 
-  classDim = ndx.dimension(function(d){ if(d.room == "") return "N/A"; return d.room;});
-  class_count = classDim.group().reduceSum(function(d){return d.count;});
-  classChart = dc.pieChart("#chart-room");
-  console.log(classChart);
+  // classDim = ndx.dimension(function(d){ if(d.room == "") return "N/A"; return d.room;});
+  // class_count = classDim.group().reduceSum(function(d){return d.count;});
+  // classChart = dc.pieChart("#chart-room");
+  // console.log(classChart);
  
-  var legend_height = 200 / 7;
-  var all = ndx.groupAll().reduceSum(function(d){ return d.count;}).value();
-  all_floor = floorDim.groupAll().reduceSum(function(d){ return d.count;}).value();
-  all_building = buildingDim.groupAll().reduceSum(function(d){ return d.count;}).value();
-  curr_building = all_building;
-  curr_floor = all_floor;
-  document.getElementById("building-helper").innerHTML = "Building: " + all ;
-  document.getElementById("floor-helper").innerHTML = "Floor: " + all ;
-  document.getElementById("wing-helper").innerHTML = "Wing: " + all ;
-  document.getElementById("room-helper").innerHTML = "Room: " + all ;
+  // var legend_height = 200 / 7;
+  // var all = ndx.groupAll().reduceSum(function(d){ return d.count;}).value();
+  // all_floor = floorDim.groupAll().reduceSum(function(d){ return d.count;}).value();
+  // all_building = buildingDim.groupAll().reduceSum(function(d){ return d.count;}).value();
+  // curr_building = all_building;
+  // curr_floor = all_floor;
+  // document.getElementById("building-helper").innerHTML = "Building: " + all ;
+  // document.getElementById("floor-helper").innerHTML = "Floor: " + all ;
+  // document.getElementById("wing-helper").innerHTML = "Wing: " + all ;
+  // document.getElementById("room-helper").innerHTML = "Room: " + all ;
 //  initCounts(floorDim,);
 // console.log(all);
   // BuildingChart.on("filtered",building_helper);
@@ -144,48 +215,48 @@ function myonload() {
   // WingChart.on("filtered",wing_helper);
 
  
- BuildingChart
-  .width(200).height(200)
-  .dimension(buildingDim)
-  .group(total_count)
-  .innerRadius(50)
-  .renderLabel(true)
-  .label(function (d){
-    label = d.value;
-    return label;
-  })
-  .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
-  .ordinalColors(["#ffcccc", "#ff9999", "#ff6666", "#ff3333","#ff0000","#cc0000","#990000"]);
+ // BuildingChart
+ //  .width(200).height(200)
+ //  .dimension(buildingDim)
+ //  .group(total_count)
+ //  .innerRadius(50)
+ //  .renderLabel(true)
+ //  .label(function (d){
+ //    label = d.value;
+ //    return label;
+ //  })
+ //  .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
+ //  .ordinalColors(["#ffcccc", "#ff9999", "#ff6666", "#ff3333","#ff0000","#cc0000","#990000"]);
 
-  FloorChart
-  .width(200).height(200)
-  .dimension(floorDim)
-  .group(floor_count)
-  .innerRadius(50)
-  .renderLabel(true)
-  .label(function (d){ return d.value;})
-  //.label(buildingDim)
-  .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
-  .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"]);
-  WingChart
-  .width(200).height(200)
-  .dimension(wingDim)
-  .group(wing_count)
-  .innerRadius(50)
-  .renderLabel(true)
-  //.label(buildingDim)
-  .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
-  .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
+  // FloorChart
+  // .width(200).height(200)
+  // .dimension(floorDim)
+  // .group(floor_count)
+  // .innerRadius(50)
+  // .renderLabel(true)
+  // .label(function (d){ return d.value;})
+  // //.label(buildingDim)
+  // .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
+  // .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"]);
+  // WingChart
+  // .width(200).height(200)
+  // .dimension(wingDim)
+  // .group(wing_count)
+  // .innerRadius(50)
+  // .renderLabel(true)
+  // //.label(buildingDim)
+  // .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
+  // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
-   classChart
-   .width(200).height(200)
-   .dimension(classDim)
-   .group(class_count)
-   .innerRadius(50)
-   .renderLabel(true)
-   //.label(buildingDim)
-   .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
-   .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
+   // classChart
+   // .width(200).height(200)
+   // .dimension(classDim)
+   // .group(class_count)
+   // .innerRadius(50)
+   // .renderLabel(true)
+   // //.label(buildingDim)
+   // .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
+   // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
   dc.renderAll();
 }

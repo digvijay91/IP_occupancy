@@ -69,16 +69,19 @@ def past_week_data(request,time):
 		c.perform()
 		api_data = b.getvalue()
 		api_to_json = json.loads(api_data)
-		dict = {}
-		count = 0
+		# count = 0
 		for j in range(0,int(api_to_json["size"])):
-			count = count + int(api_to_json["occupancy_information"][j]["count"])
-		dict["day"] = current_time.strftime("%A")
-		dict["count"] = count
-		# print api_data
-		list.append(dict)
+			dict = {}
+			#count = count + int(api_to_json["occupancy_information"][j]["count"])
+			dict["day"] = current_time.strftime("%A")
+			dict["building"] = api_to_json["occupancy_information"][j]["building"]
+			dict["floor"] = api_to_json["occupancy_information"][j]["floor"]
+			dict["wing"] = api_to_json["occupancy_information"][j]["wing"]
+			dict["room"] = api_to_json["occupancy_information"][j]["room"]
+			dict["count"] = api_to_json["occupancy_information"][j]["count"]
+			list.append(dict)
 		i = i -1
-	keys = ['day','count']
+	keys = ['day','building','floor','wing','room','count']
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="past_week_data.csv"'
 	dict_writer = csv.DictWriter(response, keys)
