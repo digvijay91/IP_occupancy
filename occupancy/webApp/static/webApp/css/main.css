@@ -42,15 +42,19 @@ body{
 }*/
 #middle-column{
   height:100%;
-  width:450px;
+  width:100%;
   display:inline-block;
   /*background:brown;*/
   /*float:left;*/
   margin: auto;
 }
+
+#time_form{
+  margin-left: 80%;
+}
 #right-column{
   height:100%;
-  width:475px;
+  width:100%;
 /*  background:#e6e6e6;*/
   /*float:right;*/
 }
@@ -80,8 +84,8 @@ body{
   border:1px solid white;
 }
 #chart-floor{
-  /*height:210px;*/
-  width:0px;
+  height:210px;
+  width:300px;
 }
 #chart-floor svg{
   width:300px;

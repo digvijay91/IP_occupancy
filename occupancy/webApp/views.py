@@ -45,9 +45,11 @@ def index(request):
 #  return render(request, 'webApp/index.html', context)
 
 def past_week_data(request,time):
+	# print time
+
 	current_time = datetime.strptime(time,"%Y-%m-%d-%H:%M:%S")
 	current_time= current_time - relativedelta(days = 7)
-	print current_time
+	# print current_time
 	module_dir = os.path.dirname(__file__) # get current directory
 	file_dir = os.path.join(module_dir,'token')
 	handle = open(file_dir,'r')

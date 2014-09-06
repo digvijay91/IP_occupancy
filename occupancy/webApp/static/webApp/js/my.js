@@ -2,8 +2,13 @@
 
 // obj = JSON.parse(text);
 var obj;
+$(document).ready(function(){
+  
+  displaychart();
 
-window.onload = myonload;
+});
+
+// window.onload = displaychart;
 function print_filter(filter){
   var f=eval(filter);
   if (typeof(f.length) != "undefined") {}
@@ -69,13 +74,30 @@ function wing_helper(chart,filter){
     elem.innerHTML= "Wing: "+ sum; 
     curr_floor = sum;
 };
-
+function random() {
+  var t = $('input[name=userTime]');
+  if (t.val() == "")
+    console.log("empty");
+}
 function displaychart(){
+  var weekday = new Array(7);
+  weekday[0]=  "Sunday";
+  weekday[1] = "Monday";
+  weekday[2] = "Tuesday";
+  weekday[3] = "Wednesday";
+  weekday[4] = "Thursday";
+  weekday[5] = "Friday";
+  weekday[6] = "Saturday";
+  var t = $('input[name=userTime]');
   var current_time = new Date();
   var month = parseInt(current_time.getMonth()) + 1;
-  current_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
-  console.log(current_time);
-  d3.csv("/template/past/"+current_time, function(error, data){
+  if (t.val() == ""){
+    var param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
+  }
+  else var param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+t.val() + ":00";
+  console.log(param_time);
+  console.log(weekday[current_time.getDay()]);
+  d3.csv("/template/past/"+param_time, function(error, data){
 
       // console.log(data);
       var ndx = crossfilter(data);
@@ -110,7 +132,7 @@ function displaychart(){
       .width(1000).height(300)
       .dimension(dayDim)
       .group(day_count)
-      .filter("Thursday")
+      .filter(weekday[current_time.getDay()])
        // .x(d3.time.scale().domain([minDate,maxDate]))
       .x(d3.scale.ordinal().domain(["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]))
       .y(d3.scale.linear())
@@ -123,6 +145,12 @@ function displaychart(){
       .elasticY(true)
       .elasticX(true)
       .xAxisPadding(10)
+      // .renderlet(function(chart) {
+      //             chart.selectAll("rect.bar").on("click", function (d) {
+      //       chart.filter(null);
+      //       chart.filter(d.day);
+      //       })
+      //    })
       .xAxis().tickFormat();
 
       BuildingChart
@@ -168,8 +196,8 @@ function displaychart(){
              .renderLabel(true)
              //.label(buildingDim)
              .label(function (d){ return d.value;})
-             .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
-             .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
+             .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2));
+             // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
       dc.renderAll();
   });
@@ -258,6 +286,6 @@ function myonload() {
    // .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
    // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
-  dc.renderAll();
+  // dc.renderAll();
 }
 
