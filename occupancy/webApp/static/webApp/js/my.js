@@ -74,11 +74,7 @@ function wing_helper(chart,filter){
     elem.innerHTML= "Wing: "+ sum; 
     curr_floor = sum;
 };
-function random() {
-  var t = $('input[name=userTime]');
-  if (t.val() == "")
-    console.log("empty");
-}
+
 function displaychart(){
   var weekday = new Array(7);
   weekday[0]=  "Sunday";
@@ -89,14 +85,19 @@ function displaychart(){
   weekday[5] = "Friday";
   weekday[6] = "Saturday";
   var t = $('input[name=userTime]');
+  // console.log(t.val());
   var current_time = new Date();
   var month = parseInt(current_time.getMonth()) + 1;
   if (t.val() == ""){
     var param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
   }
-  else var param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+t.val() + ":00";
+  else {
+    var param_time = t.val();
+    param_time = param_time.replace('T','-');
+    param_time = param_time + ":00";
+  }
   console.log(param_time);
-  console.log(weekday[current_time.getDay()]);
+  // console.log(weekday[current_time.getDay()]);
   d3.csv("/template/past/"+param_time, function(error, data){
 
       // console.log(data);
@@ -107,8 +108,13 @@ function displaychart(){
       buildingDim = ndx.dimension(function(d){ return d.building;});
       var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
       var BuildingChart = dc.pieChart("#chart-building");
+      // var tempDim = ndx.dimension(function(d){return d.building; });
+      // var temp = tempDim.filter(weekday[current_time.getDay()]);
+      // print_filter(temp);
+      // var all = temp.groupAll().reduceSum(function(d){return d.count;}).value();
+      // buildingDim.filterAll();
       // console.log(day_count.top(1)[0].value);
-      floorDim = ndx.dimension(function(d){ return d.floor;});
+      floorDim = ndx.dimension(function(d){ if (d.wing=="")return "N/A";return d.floor;});
       var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
       FloorChart = dc.pieChart("#chart-floor");
 
@@ -119,8 +125,9 @@ function displaychart(){
       classDim = ndx.dimension(function(d){ if(d.room == "") return "N/A"; return d.room;});
       class_count = classDim.group().reduceSum(function(d){return d.count;});
       classChart = dc.pieChart("#chart-room");
+      d3.select('#past-linechart').selectAll("rect.bar").append("text").text(function(d){return d.count;})
 
-      // document.getElementById("building-helper").innerHTML = "Building: " + all ;
+      // document.getElementById("building-helper").innerHTML = "Building: " + all;
       // document.getElementById("floor-helper").innerHTML = "Floor: " + all ;
       // document.getElementById("wing-helper").innerHTML = "Wing: " + all ;
       // document.getElementById("room-helper").innerHTML = "Room: " + all ;
@@ -145,13 +152,18 @@ function displaychart(){
       .elasticY(true)
       .elasticX(true)
       .xAxisPadding(10)
+      
+
       // .renderlet(function(chart) {
       //             chart.selectAll("rect.bar").on("click", function (d) {
-      //       chart.filter(null);
-      //       chart.filter(d.day);
+      //                 chart.filter(null);
+      //                 chart.filter(d.day);
+      //                 // chart.title("ayush");
       //       })
       //    })
+      // .text(function(d){return"a";})
       .xAxis().tickFormat();
+      // .selectAll("rect.bar").append("text").text(function(d){return d;});
 
       BuildingChart
         .width(200).height(200)
@@ -197,6 +209,7 @@ function displaychart(){
              //.label(buildingDim)
              .label(function (d){ return d.value;})
              .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2));
+             // .colors(d3.scale.category10());
              // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
       dc.renderAll();

@@ -51,6 +51,7 @@ body{
 
 #time_form{
   margin-left: 80%;
+  font-family: sans-serif;
 }
 #right-column{
   height:100%;
@@ -74,10 +75,10 @@ body{
 }
 #chart-building{
   height:210px;
-  width:300px;
+  width:310px;
 }
 #chart-building svg{
-  width:300px;
+  width:310px;
   font-family: Arial, Helvetica, sans-serif;
   padding-left:2px;
   padding-bottom:2px;
