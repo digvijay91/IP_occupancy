@@ -156,8 +156,11 @@ function displaychart(){
       .xAxisPadding(10)
       .on("filtered",function(chart,filter){
             if(filter != null){
-              console.log(filter);
-              if(!filter_again){
+              console.log(chart.filters());
+              if(chart.filters().length == 0){
+                chart.filterAll();
+              }
+              else if(!filter_again){
                 filter_again = true;
                 chart.filterAll();
                 chart.filter(filter);
