@@ -155,8 +155,8 @@ function displaychart(){
       .xAxisPadding(10)
       .on("filtered",function(chart,filter){
             dc.events.trigger(function(){
-              chart.filterAll();
-              chart.filter(filter);
+              // chart.filterAll();
+              // chart.filter(filter);
               // console.log(filter);
               // console.log(chart.filter());
             });
