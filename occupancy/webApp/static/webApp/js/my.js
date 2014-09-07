@@ -144,6 +144,7 @@ function displaychart(){
       .x(d3.scale.ordinal().domain(["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]))
       .y(d3.scale.linear())
       //.brushOn(false)
+      // .onClick(function(chart){chart.filter("Monday")})
       .xAxisLabel("Date")
       .yAxisLabel("People in campus on average")
       .transitionDuration(500)
@@ -152,16 +153,26 @@ function displaychart(){
       .elasticY(true)
       .elasticX(true)
       .xAxisPadding(10)
-      
-
+      .on("filtered",function(chart,filter){
+            dc.events.trigger(function(){
+              chart.filterAll();
+              chart.filter(filter);
+              // console.log(filter);
+              // console.log(chart.filter());
+            });
+            // dc.events.trigger(function(){
+            //   chart.filter(filter);
+            // })
+            // chart.filter(null);
+            // chart.filter(filter);
+      })
       // .renderlet(function(chart) {
-      //             chart.selectAll("rect.bar").on("click", function (d) {
+      //             chart.selectAll('rect.bar').on("click", function (d) {
       //                 chart.filter(null);
-      //                 chart.filter(d.day);
+      //                 chart.filter(d.value);
       //                 // chart.title("ayush");
       //       })
       //    })
-      // .text(function(d){return"a";})
       .xAxis().tickFormat();
       // .selectAll("rect.bar").append("text").text(function(d){return d;});
 
@@ -201,14 +212,14 @@ function displaychart(){
             .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
             classChart
-             .width(200).height(200)
+             .width(200).height(260)
              .dimension(classDim)
              .group(class_count)
              .innerRadius(50)
              .renderLabel(true)
              //.label(buildingDim)
              .label(function (d){ return d.value;})
-             .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2));
+             .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1));
              // .colors(d3.scale.category10());
              // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
