@@ -32,6 +32,7 @@ var WingChart;
 var class_count;
 var classDim;
 var classChart;
+var filter_again = false;
 function building_helper(chart,filter){
     var elem = document.getElementById("building-helper");
     var sum = buildingDim.groupAll().reduceSum(function(d){
@@ -154,12 +155,20 @@ function displaychart(){
       .elasticX(true)
       .xAxisPadding(10)
       .on("filtered",function(chart,filter){
-            dc.events.trigger(function(){
-              // chart.filterAll();
+            if(filter != null){
+              console.log(filter);
+              if(!filter_again){
+                filter_again = true;
+                chart.filterAll();
+                chart.filter(filter);
+              }
+              else{
+                filter_again = false;
+              }
+            }
               // chart.filter(filter);
               // console.log(filter);
               // console.log(chart.filter());
-            });
             // dc.events.trigger(function(){
             //   chart.filter(filter);
             // })
