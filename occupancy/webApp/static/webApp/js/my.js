@@ -98,6 +98,7 @@ function displaychart(){
     param_time = param_time + ":00";
   }
   console.log(param_time);
+  // document.getElementById("showdate").innerHTML = param_time +"\n" + weekday[current_time.getDay()];
   // console.log(weekday[current_time.getDay()]);
   d3.csv("/template/past/"+param_time, function(error, data){
 
@@ -187,6 +188,7 @@ function displaychart(){
       //    })
       .xAxis().tickFormat();
       // .selectAll("rect.bar").append("text").text(function(d){return d;});
+      var filter_again_building = false;
 
       BuildingChart
         .width(200).height(200)
@@ -199,7 +201,24 @@ function displaychart(){
           return label;
         })
         .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
-        .ordinalColors(["#ffcccc", "#ff9999", "#ff6666", "#ff3333","#ff0000","#cc0000","#990000"]);
+        .ordinalColors(["#ffcccc", "#ff9999", "#ff6666", "#ff3333","#ff0000","#cc0000","#990000"])
+        .on("filtered",function(chart,filter){
+            if(filter != null){
+              console.log(chart.filters());
+              if(chart.filters().length == 0){
+                chart.filterAll();
+              }
+              else if(!filter_again_building){
+                filter_again_building = true;
+                chart.filterAll();
+                chart.filter(filter);
+              }
+              else{
+                filter_again_building = false;
+              }
+            }
+          });
+        var filter_again_floor = false;
 
         FloorChart
           .width(200).height(200)
@@ -210,7 +229,24 @@ function displaychart(){
           .label(function (d){ return d.value;})
           //.label(buildingDim)
           .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
-          .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"]);
+          .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"])
+          .on("filtered",function(chart,filter){
+            if(filter != null){
+              console.log(chart.filters());
+              if(chart.filters().length == 0){
+                chart.filterAll();
+              }
+              else if(!filter_again_floor){
+                filter_again_floor = true;
+                chart.filterAll();
+                chart.filter(filter);
+              }
+              else{
+                filter_again_floor = false;
+              }
+            }
+          });
+          var filter_again_wing = false;
 
           WingChart
             .width(200).height(200)
@@ -221,8 +257,24 @@ function displaychart(){
             //.label(buildingDim)
             .label(function (d){ return d.value;})
             .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
-            .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
-
+            .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"])
+            .on("filtered",function(chart,filter){
+            if(filter != null){
+              console.log(chart.filters());
+              if(chart.filters().length == 0){
+                chart.filterAll();
+              }
+              else if(!filter_again_wing){
+                filter_again_wing = true;
+                chart.filterAll();
+                chart.filter(filter);
+              }
+              else{
+                filter_again_wing = false;
+              }
+            }
+          });
+            var filter_again_class = false;
             classChart
              .width(200).height(260)
              .dimension(classDim)
@@ -231,7 +283,23 @@ function displaychart(){
              .renderLabel(true)
              //.label(buildingDim)
              .label(function (d){ return d.value;})
-             .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1));
+             .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
+             .on("filtered",function(chart,filter){
+              if(filter != null){
+                console.log(chart.filters());
+                if(chart.filters().length == 0){
+                  chart.filterAll();
+                  }
+                  else if(!filter_again_class){
+                    filter_again_class = true;
+                    chart.filterAll();
+                    chart.filter(filter);
+                  }
+                  else{
+                    filter_again_class = false;
+                  }
+                }
+              });
              // .colors(d3.scale.category10());
              // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
