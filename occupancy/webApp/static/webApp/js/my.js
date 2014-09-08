@@ -116,7 +116,7 @@ function displaychart(){
       // var all = temp.groupAll().reduceSum(function(d){return d.count;}).value();
       // buildingDim.filterAll();
       // console.log(day_count.top(1)[0].value);
-      floorDim = ndx.dimension(function(d){ if (d.wing=="")return "N/A";return d.floor;});
+      floorDim = ndx.dimension(function(d){ if (d.floor=="")return "N/A";return d.floor;});
       var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
       FloorChart = dc.pieChart("#chart-floor");
 
