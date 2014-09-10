@@ -25,6 +25,7 @@ var curr_floor;
 var all_building;
 var all_floor;
 var buildingDim;
+var BuildingChart;
 var floorDim;
 var wingDim;
 var FloorChart;
@@ -33,6 +34,7 @@ var class_count;
 var classDim;
 var classChart;
 var filter_again = false;
+var ndx;
 function building_helper(chart,filter){
     var elem = document.getElementById("building-helper");
     var sum = buildingDim.groupAll().reduceSum(function(d){
@@ -75,7 +77,39 @@ function wing_helper(chart,filter){
     elem.innerHTML= "Wing: "+ sum; 
     curr_floor = sum;
 };
+function hide_chart(chart){
+      Dim = ndx.dimension(function(d){;});
+      var count = Dim.group().reduceCount(function(d){return 0;});
+      chart.dimension(Dim);
+      chart.group(count);
+      chart.render();
+}
 
+function reset_chart(chart, filter,type){
+  if(type == "floor"){
+    if(BuildingChart.filters().length>0){ // A new filter was selected\
+      floorDim = ndx.dimension(function(d){ if(d.building == chart.filters()[0]) return d.floor; });
+      var fcount =floorDim.group().reduceSum(function(d){return d.count;});
+      FloorChart.dimension(floorDim);
+      FloorChart.group(fcount);
+      FloorChart.render();
+    }
+    else { // Now the chart has no filters
+      alert(BuildingChart.filters());
+      var titles = document.getElementsByClassName('chart-title');
+      for(i=0;i<titles.length;i++){
+        if(titles[i].innerHTML != "Building"){
+          titles[i].innerHTML = "Select Building";
+        }
+      }
+      hide_chart(FloorChart);
+      hide_chart(WingChart);
+      hide_chart(classChart);
+    }
+  }
+     
+
+}
 function displaychart(){
   var weekday = new Array(7);
   weekday[0]=  "Sunday";
@@ -86,7 +120,7 @@ function displaychart(){
   weekday[5] = "Friday";
   weekday[6] = "Saturday";
   var t = $('input[name=userTime]');
-  // console.log(t.val());
+   console.log(t.val());
   var current_time = new Date();
   var month = parseInt(current_time.getMonth()) + 1;
   if (t.val() == ""){
@@ -103,24 +137,24 @@ function displaychart(){
   d3.csv("/template/past/"+param_time, function(error, data){
 
       // console.log(data);
-      var ndx = crossfilter(data);
+      ndx = crossfilter(data);
       var dayDim = ndx.dimension(function(d) {return d.day;});
       var day_count = dayDim.group().reduceSum(function(d){return d.count;});
       var past_linechart = dc.barChart("#past-linechart");
       buildingDim = ndx.dimension(function(d){ return d.building;});
       var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
-      var BuildingChart = dc.pieChart("#chart-building");
-      // var tempDim = ndx.dimension(function(d){return d.building; });
+      BuildingChart = dc.pieChart("#chart-building");
+     // var tempDim = ndx.dimension(function(d){return d.building; });
       // var temp = tempDim.filter(weekday[current_time.getDay()]);
       // print_filter(temp);
       // var all = temp.groupAll().reduceSum(function(d){return d.count;}).value();
       // buildingDim.filterAll();
       // console.log(day_count.top(1)[0].value);
-      floorDim = ndx.dimension(function(d){ if (d.floor=="")return "N/A";return d.floor;});
+      floorDim = ndx.dimension(function(d){ return d.floor;});
       var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
       FloorChart = dc.pieChart("#chart-floor");
 
-      wingDim = ndx.dimension(function(d){ if(d.wing == "") return "N/A";return d.wing;});
+      wingDim = ndx.dimension(function(d){  if(d.wing == "") return "N/A";return d.wing;});
       var wing_count = wingDim.group().reduceSum(function(d){return d.count;});
       WingChart = dc.pieChart("#chart-wing");
 
@@ -207,14 +241,22 @@ function displaychart(){
               console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
-              }
+                reset_chart(chart,filter,"floor");
+/*                var select = 0;
+                floorDim = ndx.dimension(function(d){ if(select == 0){select++;return "Building";}else if (select == 1) { select++; return "1st Select";} });
+                var fcount =floorDim.group().reduceSum(function(d){return 1;});
+                FloorChart.dimension(floorDim);
+                FloorChart.group(fcount);
+                FloorChart.render();*/
+             }
               else if(!filter_again_building){
                 filter_again_building = true;
                 chart.filterAll();
                 chart.filter(filter);
-              }
+                reset_chart(chart,filter,"floor");
+            }
               else{
-                filter_again_building = false;
+                filter_again_building=false;
               }
             }
           });
@@ -240,6 +282,7 @@ function displaychart(){
                 filter_again_floor = true;
                 chart.filterAll();
                 chart.filter(filter);
+//                wingDim = 
               }
               else{
                 filter_again_floor = false;
@@ -276,7 +319,7 @@ function displaychart(){
           });
             var filter_again_class = false;
             classChart
-             .width(200).height(260)
+             .width(200).height(200)
              .dimension(classDim)
              .group(class_count)
              .innerRadius(50)

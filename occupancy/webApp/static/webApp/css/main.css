@@ -13,8 +13,20 @@ body{
   min-height:600px;
   min-width:1000px;
   max-height:700px;
+  font-family: Arial, Helvetica, sans-serif;
 /*  background:blue;
   overflow:hidden;*/
+}
+#wrapper-floor{
+  z-index:100;
+  background-color:orange;
+  height:210px;
+  width:300px;
+}
+.center-text{
+  text-align: center;
+  vertical-align:middle;
+  line-height:210px;
 }
 #all-container{
   width:1150px;
@@ -23,7 +35,7 @@ body{
 /*overflow:hidden;*/
 }
 #header-div{
-  background-color: red;
+  background-color: violet;
   height:100px;
   width:100%;
 }
@@ -38,28 +50,59 @@ body{
   width:0px;
   height:100%;
   background:orange;
-  /*float:left;*/
-}*/
-#middle-column{
-  height:100%;
+  /*float:left;
+}
+*/
+#middle{
   width:100%;
+  min-width:1200px;
+  height:300px;
+  min-height:300px;
+  background-color:red;
   display:inline-block;
-  /*background:brown;*/
-  /*float:left;*/
-  margin: auto;
+  margin: 0 auto;
+  float:left;
+}
+#bottom{
+  width:100%;
+  min-width:920px;
+  min-height:320px;
+  height:100%;
+  background-color:orange;
+}
+#middle-column{
+  height:400px;
+  width:920px;
+  display:inline-block;
+  background:brown;
+  float:left;
+  margin: 0 auto;
+  margin-left:20px;
 }
 
 #time_form{
-  margin-left: 80%;
+/*  margin-left: 80%;*/
   font-family: sans-serif;
+  background-color: blue;
+  height:100px;
+  width:100%;
+  position:relative;
+  top:100px;
+/*  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+/*  display:inline-block;
+/*  padding-top:100px ;*/
 }
 #right-column{
   height:100%;
-  width:100%;
+  width:250px;
+  min-width:250px;
 /*  background:#e6e6e6;*/
-  /*float:right;*/
+  float:right;
+  text-align:center;
+  margin-left:auto;
+  margin-right:auto;
 }
-
 #past-linechart{
   height: 300px;
   width: 900px;
@@ -70,51 +113,51 @@ body{
   font-family: Arial, Helvetica, sans-serif;
   padding-left:2px;
   padding-bottom:2px;
-  border:1px solid white;
 
 }
 #chart-building{
   height:210px;
   width:310px;
+  background-color:magenta;
 }
 #chart-building svg{
   width:310px;
   font-family: Arial, Helvetica, sans-serif;
   padding-left:2px;
   padding-bottom:2px;
-  border:1px solid white;
 }
 #chart-floor{
   height:210px;
   width:300px;
+  z-index: 10;
+  background-color:purple;
 }
 #chart-floor svg{
   width:300px;
   font-family: Arial, Helvetica, sans-serif;
   padding:2px;
-  border:1px solid white;
 }
 #chart-wing{
   height:210px;
   width:300px;
+  background-color:grey;
 }
 #chart-wing svg{
   width:275px;
   font-family: Arial, Helvetica, sans-serif;
   padding:2px;
-  border:1px solid white;
 }
 
 #chart-room{
-  height:250px;
-  width:175px;
+  height:210px;
+  width:200px;
+  background-color:orange;
 }
 
 #chart-room svg{
-  width:320px;
+  width:275px;
   font-family: Arial, Helvetica, sans-serif;
   padding:2px;
-  border:1px solid white;
 }
 .chart-title{
   font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
