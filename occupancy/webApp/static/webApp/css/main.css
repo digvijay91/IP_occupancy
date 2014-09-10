@@ -65,6 +65,13 @@ body{
   width: 900px;
 }
 
+#past-linechart .val {
+    position:absolute;
+    left:0;
+    bottom:0;
+    text-align: right;
+}
+
 #past-linechart svg{
   width:900px;
   font-family: Arial, Helvetica, sans-serif;
