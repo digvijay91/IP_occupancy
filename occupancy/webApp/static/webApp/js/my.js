@@ -35,6 +35,9 @@ var classDim;
 var classChart;
 var filter_again = false;
 var ndx;
+var titles = document.getElementsByClassName('chart-title');
+var title_text = ["Building","Floor","Wing","Room"];
+
 function building_helper(chart,filter){
     var elem = document.getElementById("building-helper");
     var sum = buildingDim.groupAll().reduceSum(function(d){
@@ -85,31 +88,73 @@ function hide_chart(chart){
       chart.render();
 }
 
-function reset_chart(chart, filter,type){
-  if(type == "floor"){
-    if(BuildingChart.filters().length>0){ // A new filter was selected\
-      floorDim = ndx.dimension(function(d){ if(d.building == chart.filters()[0]) return d.floor; });
-      var fcount =floorDim.group().reduceSum(function(d){return d.count;});
-      FloorChart.dimension(floorDim);
-      FloorChart.group(fcount);
-      FloorChart.render();
-    }
-    else { // Now the chart has no filters
-      alert(BuildingChart.filters());
-      var titles = document.getElementsByClassName('chart-title');
-      for(i=0;i<titles.length;i++){
-        if(titles[i].innerHTML != "Building"){
-          titles[i].innerHTML = "Select Building";
-        }
-      }
-      hide_chart(FloorChart);
-      hide_chart(WingChart);
-      hide_chart(classChart);
+function chain_chart(schart){
+  var node;
+  var ParentChart;var child = null;
+  var Dim;var oldDim;
+  var chart;
+  if(schart == "Floor"){
+    chart = FloorChart;
+    FloorChart.filterAll();
+    FloorChart.dimension().dispose();
+    node = 1;
+    ParentChart = BuildingChart;
+    child = WingChart;
+    oldDim = floorDim;
+    if(ParentChart.filters().length>0)
+      Dim =  ndx.dimension(function(d){ if(d.building == ParentChart.filters()[0]) return d.floor; });
+    else{
+      Dim = null;
     }
   }
-     
-
+  else if(schart =="Wing"){
+    chart = WingChart;
+    WingChart.filterAll();
+    WingChart.dimension().dispose();
+    node = 2;
+    ParentChart = FloorChart;
+    child = classChart;
+    oldDim = wingDim;
+    if(ParentChart.filters().length>0){
+      Dim = ndx.dimension(function(d){ console.log(">>"+ParentChart.filters()[0]);if(d.floor == ParentChart.filters()[0] && d.building == BuildingChart.filters()[0]){console.log(d.wing +" "+d.floor); if(d.wing == "") return "N/A"; else return d.wing; }});
+    }
+    else {
+      Dim = null;
+    }
+  }
+  else if(schart == "Room"){
+    chart = classChart;
+    classChart.filterAll();
+    classChart.dimension().dispose();
+    node = 3;
+    ParentChart = WingChart;
+    oldDim = classDim;
+    if(ParentChart.filters().length >0){
+      Dim =  ndx.dimension(function(d){ if((d.wing == ParentChart.filters()[0] || (d.wing == "" && ParentChart.filters()[0] ==  "N/A")) && d.floor == FloorChart.filters()[0] && d.building == BuildingChart.filters()[0]) { if(d.room == "") return "N/A"; else return d.room; }});
+    }
+    else{
+      Dim = null;
+    }
+  }
+  else{
+    return;
+  }
+  if( Dim != null){
+    var count = Dim.group().reduceSum(function(d){return d.count;});
+    //chart.filterAll();
+    chart.dimension(Dim);
+    chart.group(count);
+    chart.render();
+    titles[node].innerHTML = title_text[node];
+  }
+  else {
+    titles[node].innerHTML = "Select " + title_text[node-1];
+    hide_chart(chart);
+  }
+  if(node+1<title_text.length)
+    chain_chart(title_text[node+1]);
 }
+
 function displaychart(){
   var weekday = new Array(7);
   weekday[0]=  "Sunday";
@@ -144,12 +189,6 @@ function displaychart(){
       buildingDim = ndx.dimension(function(d){ return d.building;});
       var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
       BuildingChart = dc.pieChart("#chart-building");
-     // var tempDim = ndx.dimension(function(d){return d.building; });
-      // var temp = tempDim.filter(weekday[current_time.getDay()]);
-      // print_filter(temp);
-      // var all = temp.groupAll().reduceSum(function(d){return d.count;}).value();
-      // buildingDim.filterAll();
-      // console.log(day_count.top(1)[0].value);
       floorDim = ndx.dimension(function(d){ return d.floor;});
       var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
       FloorChart = dc.pieChart("#chart-floor");
@@ -241,7 +280,8 @@ function displaychart(){
               console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
-                reset_chart(chart,filter,"floor");
+                chain_chart("Floor");
+//                reset_chart(chart,filter,"floor");
 /*                var select = 0;
                 floorDim = ndx.dimension(function(d){ if(select == 0){select++;return "Building";}else if (select == 1) { select++; return "1st Select";} });
                 var fcount =floorDim.group().reduceSum(function(d){return 1;});
@@ -253,10 +293,11 @@ function displaychart(){
                 filter_again_building = true;
                 chart.filterAll();
                 chart.filter(filter);
-                reset_chart(chart,filter,"floor");
+//                reset_chart(chart,filter,"floor");
             }
               else{
                 filter_again_building=false;
+                chain_chart("Floor");
               }
             }
           });
@@ -270,13 +311,14 @@ function displaychart(){
           .renderLabel(true)
           .label(function (d){ return d.value;})
           //.label(buildingDim)
-          .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
+          .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
           .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"])
           .on("filtered",function(chart,filter){
             if(filter != null){
               console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
+                chain_chart("Wing");
               }
               else if(!filter_again_floor){
                 filter_again_floor = true;
@@ -286,6 +328,7 @@ function displaychart(){
               }
               else{
                 filter_again_floor = false;
+                chain_chart("Wing");
               }
             }
           });
@@ -299,13 +342,14 @@ function displaychart(){
             .renderLabel(true)
             //.label(buildingDim)
             .label(function (d){ return d.value;})
-            .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
+            .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
             .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"])
             .on("filtered",function(chart,filter){
             if(filter != null){
               console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
+                chain_chart("Room");
               }
               else if(!filter_again_wing){
                 filter_again_wing = true;
@@ -314,6 +358,7 @@ function displaychart(){
               }
               else{
                 filter_again_wing = false;
+                chain_chart("Room");
               }
             }
           });
@@ -326,7 +371,7 @@ function displaychart(){
              .renderLabel(true)
              //.label(buildingDim)
              .label(function (d){ return d.value;})
-             .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
+             .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
              .on("filtered",function(chart,filter){
               if(filter != null){
                 console.log(chart.filters());
@@ -347,6 +392,7 @@ function displaychart(){
              // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
 
       dc.renderAll();
+      chain_chart("Floor");
   });
 }
 function myonload() {
