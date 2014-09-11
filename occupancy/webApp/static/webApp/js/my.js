@@ -2,6 +2,9 @@
 
 // obj = JSON.parse(text);
 var obj;
+var weekday = new Array(7);
+var param_time, t;
+var chart_dates = new Array(7);
 $(document).ready(function(){
   
   displaychart();
@@ -156,7 +159,7 @@ function chain_chart(schart){
 }
 
 function displaychart(){
-  var weekday = new Array(7);
+  
   weekday[0]=  "Sunday";
   weekday[1] = "Monday";
   weekday[2] = "Tuesday";
@@ -164,19 +167,29 @@ function displaychart(){
   weekday[4] = "Thursday";
   weekday[5] = "Friday";
   weekday[6] = "Saturday";
-  var t = $('input[name=userTime]');
-   console.log(t.val());
+  t = $('input[name=userTime]');
+  var week_day;
+  var x_axis_params = new Array(7);
   var current_time = new Date();
   var month = parseInt(current_time.getMonth()) + 1;
   if (t.val() == ""){
-    var param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
+    param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
+    week_day = current_time.getDay();
+    x_axis_params =  gen_xaxis(week_day,0);
   }
   else {
-    var param_time = t.val();
+    param_time = t.val();
     param_time = param_time.replace('T','-');
     param_time = param_time + ":00";
+    var for_day = new Date(t.val());
+    console.log(for_day);
+    week_day = for_day.getDay();
+    x_axis_params =  gen_xaxis(week_day,1);
   }
   console.log(param_time);
+  
+  
+  
   // document.getElementById("showdate").innerHTML = param_time +"\n" + weekday[current_time.getDay()];
   // console.log(weekday[current_time.getDay()]);
   d3.csv("/template/past/"+param_time, function(error, data){
@@ -214,9 +227,9 @@ function displaychart(){
       .width(1000).height(300)
       .dimension(dayDim)
       .group(day_count)
-      .filter(weekday[current_time.getDay()])
+      .filter(weekday[week_day])
        // .x(d3.time.scale().domain([minDate,maxDate]))
-      .x(d3.scale.ordinal().domain(["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]))
+      .x(d3.scale.ordinal().domain(x_axis_params))
       .y(d3.scale.linear())
       //.brushOn(false)
       // .onClick(function(chart){chart.filter("Monday")})
@@ -224,13 +237,13 @@ function displaychart(){
       .yAxisLabel("People in campus on average")
       .transitionDuration(500)
       .centerBar(true)    
-      .gap(65)
+      .gap(50)
       .elasticY(true)
       .elasticX(true)
       .xAxisPadding(10)
       .on("filtered",function(chart,filter){
             if(filter != null){
-              console.log(chart.filters());
+              //console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
               }
@@ -243,22 +256,39 @@ function displaychart(){
                 filter_again = false;
               }
             }
-              // chart.filter(filter);
-              // console.log(filter);
-              // console.log(chart.filter());
-            // dc.events.trigger(function(){
-            //   chart.filter(filter);
-            // })
-            // chart.filter(null);
-            // chart.filter(filter);
+              
       })
-      // .renderlet(function(chart) {
-      //             chart.selectAll('rect.bar').on("click", function (d) {
-      //                 chart.filter(null);
-      //                 chart.filter(d.value);
-      //                 // chart.title("ayush");
-      //       })
-      //    })
+      .renderlet(function (chart) {
+        
+        //Check if labels exist
+        var gLabels = chart.select(".labels");
+        if (gLabels.empty()){
+            gLabels = chart.select(".chart-body").append('g').classed('labels', true);
+        }
+        
+        var gLabelsData = gLabels.selectAll("text").data(chart.selectAll(".bar")[0]);
+        
+        gLabelsData.exit().remove(); //Remove unused elements
+        
+        gLabelsData.enter().append("text") //Add new elements
+        
+        gLabelsData
+        .attr('text-anchor', 'middle')
+        .attr('fill', 'black')
+        .text(function(d){
+            var ind = x_axis_params.indexOf(d3.select(d).data()[0].data.key);
+            return chart_dates[ind];
+        })
+        .attr('x', function(d){ 
+            return +d.getAttribute('x') + (d.getAttribute('width')/2); 
+        })
+        .attr('y', function(d){ return +d.getAttribute('y') + 15; })
+        .attr('style', function(d){
+            if (+d.getAttribute('height') < 18) return "display:none";
+        });
+        
+    })
+      
       .xAxis().tickFormat();
       // .selectAll("rect.bar").append("text").text(function(d){return d;});
       var filter_again_building = false;
@@ -277,7 +307,7 @@ function displaychart(){
         .ordinalColors(["#ffcccc", "#ff9999", "#ff6666", "#ff3333","#ff0000","#cc0000","#990000"])
         .on("filtered",function(chart,filter){
             if(filter != null){
-              console.log(chart.filters());
+              //console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
                 chain_chart("Floor");
@@ -304,7 +334,7 @@ function displaychart(){
         var filter_again_floor = false;
 
         FloorChart
-          .width(200).height(200)
+          .width(200).height(230)
           .dimension(floorDim)
           .group(floor_count)
           .innerRadius(50)
@@ -315,7 +345,7 @@ function displaychart(){
           .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"])
           .on("filtered",function(chart,filter){
             if(filter != null){
-              console.log(chart.filters());
+              //console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
                 chain_chart("Wing");
@@ -335,7 +365,7 @@ function displaychart(){
           var filter_again_wing = false;
 
           WingChart
-            .width(200).height(200)
+            .width(200).height(230)
             .dimension(wingDim)
             .group(wing_count)
             .innerRadius(50)
@@ -393,7 +423,64 @@ function displaychart(){
 
       dc.renderAll();
       chain_chart("Floor");
+      past_linechart.renderlet(function(chart){
+        //displayDateChart();
+      });
   });
+}
+
+function gen_xaxis(day,flag){
+  var i = 0;
+  var index;
+  var temparray = new Array(7);
+  for (i=0;i<7;i++){
+    if (flag==0)
+      var temp = new Date(param_time);
+    else var temp = new Date(t.val());
+    //console.log(temp);
+    if ((day-i)<0)
+      index = 7 + (day-i);
+    else index = day - i;
+    temparray[6 - i] = weekday[index];
+    temp.setDate(temp.getDate() - i);;
+    chart_dates[6-i] = formattime(temp);
+  }
+  console.log(temparray);
+  console.log(chart_dates);
+  return temparray;
+}
+function formattime(time){
+  var dd = time.getDate();
+  var mm = time.getMonth()+1; //January is 0!
+
+    var yyyy = time.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    } 
+    var today = dd+'/'+mm+'/'+yyyy;
+    return today;
+
+}
+function displayDateChart() {
+  console.log("entered");
+   var $chart = $('#past-linechart'),
+   bar  = $chart.find('.bar');
+   
+    bar.each(function (i, item) {
+        var bar_top    = 300;
+        var bar_left   = this.width.baseVal.value + this.width.baseVal.value/100 + 30;
+        var bar_offset_x = 30;
+        var bar_offset_y = 33;
+        
+        //var bar_val = $(this).find('title').html().split(':')[1];
+        var bar_val = chart_dates[i];
+        
+        $chart.append('<div class="val" style="bottom:'+(bar_top+bar_offset_y)+'px;left:'+((bar_left*i)+(bar_offset_x))+'px;width:'+bar_left+'px">'+bar_val+'</div>');
+                
+    });
 }
 function myonload() {
   displaychart();
