@@ -13,35 +13,32 @@
 <body>
 <!-- {{api_data}} -->
 <div id="all-container">
-  <!--div id="header-div">Header</div-->
+  <div id="header-div">Header</div>
   <div id="main-container">
     <!-- <div id="left-column">
     </div> -->
-    <div id="middle-column">
-    <!-- <div id="top-row">
-      <div id="building-helper"></div>
-      <div id="floor-helper"></div>
-      <div id="wing-helper"></div>
-      <div id="room-helper"></div>
-    </div> -->
-    <form>
-      <p id = "time_form">
-        Select Date and Time: <input type = "datetime-local" name = "userTime">
-        <button type = "button" onclick="displaychart()">Go</button>
-      </p>
-    </form>
-
-      <div id = "past-linechart"></div>
-    <!-- <div id="right-column"> -->
-      <div id="chart-building">
-        <div class="chart-title">Building
-        </div>
+    <div id="middle">
+      <div id="middle-column">
+      <!-- <div id="top-row">
+        <div id="building-helper"></div>
+        <div id="floor-helper"></div>
+        <div id="wing-helper"></div>
+        <div id="room-helper"></div>
+      </div> -->
+        <div id = "past-linechart"></div>
       </div>
+      <div id="right-column">
+        <form>
+          <div id = "time_form">Select Date and Time: <input type = "datetime-local" name = "userTime"><button type = "button" onclick="displaychart()">Go</button></div>
+        </form>
+      </div>
+    </div>
+    <div id="bottom-column"> 
+      <div id="chart-building"><div class="chart-title">Building</div></div>
       <div id="chart-floor"><div class="chart-title">Floor</div></div>
       <div id="chart-wing"><div class="chart-title">Wing</div></div>
       <div id="chart-room"><div class="chart-title">Room</div></div>
-    <!-- </div> -->
-    </div>
+    </div> 
   </div>
 </div>
 <!-- <div id ="showdate"></div> -->

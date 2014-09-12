@@ -19,7 +19,7 @@ body{
 }
 #wrapper-floor{
   z-index:100;
-  /*background-color:orange;*/
+  background-color:orange;
   height:210px;
   width:300px;
 }
@@ -35,7 +35,7 @@ body{
 /*overflow:hidden;*/
 }
 #header-div{
-  /*background-color: violet;*/
+  background-color: violet;
   height:100px;
   width:100%;
 }
@@ -56,9 +56,9 @@ body{
 #middle{
   width:100%;
   min-width:1200px;
-  height:300px;
-  min-height:300px;
-  /*background-color:red;*/
+  height:400px;
+  min-height:400px;
+  background-color:red;
   display:inline-block;
   margin: 0 auto;
   float:left;
@@ -68,13 +68,13 @@ body{
   min-width:920px;
   min-height:320px;
   height:100%;
-  /*background-color:orange;*/
+  background-color:orange;
 }
 #middle-column{
   height:400px;
   width:920px;
   display:inline-block;
-  /*background:brown;*/
+  background:brown;
   float:left;
   margin: 0 auto;
   margin-left:20px;
@@ -83,7 +83,7 @@ body{
 #time_form{
 /*  margin-left: 80%;*/
   font-family: sans-serif;
-  /*background-color: blue;*/
+  background-color: blue;
   height:100px;
   width:100%;
   position:relative;
@@ -108,13 +108,6 @@ body{
   width: 900px;
 }
 
-#past-linechart .val {
-    position:absolute;
-    left:0;
-    bottom:0;
-    text-align: right;
-}
-
 #past-linechart svg{
   width:900px;
   font-family: Arial, Helvetica, sans-serif;
@@ -125,7 +118,7 @@ body{
 #chart-building{
   height:210px;
   width:310px;
-  /*background-color:magenta;*/
+  background-color:magenta;
 }
 #chart-building svg{
   width:310px;
@@ -137,7 +130,7 @@ body{
   height:210px;
   width:300px;
   z-index: 10;
-  /*background-color:purple;*/
+  background-color:purple;
 }
 #chart-floor svg{
   width:300px;
@@ -147,7 +140,7 @@ body{
 #chart-wing{
   height:210px;
   width:300px;
-  /*background-color:grey;*/
+  background-color:grey;
 }
 #chart-wing svg{
   width:275px;
@@ -158,7 +151,7 @@ body{
 #chart-room{
   height:210px;
   width:200px;
-/*  background-color:orange;*/
+  background-color:orange;
 }
 
 #chart-room svg{
