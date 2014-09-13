@@ -5,6 +5,7 @@ var obj;
 var weekday = new Array(7);
 var param_time, t;
 var chart_dates = new Array(7);
+var x_axis_params = new Array(7);
 $(document).ready(function(){
   
   displaychart();
@@ -160,16 +161,16 @@ function chain_chart(schart){
 
 function displaychart(){
   
-  weekday[0]=  "Sunday";
-  weekday[1] = "Monday";
-  weekday[2] = "Tuesday";
-  weekday[3] = "Wednesday";
-  weekday[4] = "Thursday";
-  weekday[5] = "Friday";
-  weekday[6] = "Saturday";
+  weekday[0]=  "Sun";
+  weekday[1] = "Mon";
+  weekday[2] = "Tues";
+  weekday[3] = "Wed";
+  weekday[4] = "Thurs";
+  weekday[5] = "Fri";
+  weekday[6] = "Sat";
   t = $('input[name=userTime]');
   var week_day;
-  var x_axis_params = new Array(7);
+  
   var current_time = new Date();
   var month = parseInt(current_time.getMonth()) + 1;
   if (t.val() == ""){
@@ -224,20 +225,20 @@ function displaychart(){
       .xUnits(dc.units.ordinal)
       //.xUnits(d3.time.hours)
       //.xUnits(dc.units.ordinal)
-      .width(1000).height(300)
+      .width(900).height(300)
       .dimension(dayDim)
       .group(day_count)
-      .filter(weekday[week_day])
+      .filter(chart_dates[6])
        // .x(d3.time.scale().domain([minDate,maxDate]))
-      .x(d3.scale.ordinal().domain(x_axis_params))
+      .x(d3.scale.ordinal().domain(chart_dates))
       .y(d3.scale.linear())
       //.brushOn(false)
       // .onClick(function(chart){chart.filter("Monday")})
       .xAxisLabel("Date")
-      .yAxisLabel("People in campus on average")
+      .yAxisLabel("Devices in Campus (approx)")
       .transitionDuration(500)
-      .centerBar(true)    
-      .gap(50)
+      // .centerBar(true)    
+      .gap(60)
       .elasticY(true)
       .elasticX(true)
       .xAxisPadding(10)
@@ -274,10 +275,10 @@ function displaychart(){
         
         gLabelsData
         .attr('text-anchor', 'middle')
-        .attr('fill', 'black')
+        .attr('fill', 'white')
         .text(function(d){
-            var ind = x_axis_params.indexOf(d3.select(d).data()[0].data.key);
-            return chart_dates[ind];
+            var ind = chart_dates.indexOf(d3.select(d).data()[0].data.key);
+            return x_axis_params[ind];
         })
         .attr('x', function(d){ 
             return +d.getAttribute('x') + (d.getAttribute('width')/2); 
@@ -460,7 +461,7 @@ function formattime(time){
     if(mm<10){
         mm='0'+mm
     } 
-    var today = dd+'/'+mm+'/'+yyyy;
+    var today = mm+'/'+dd+'/'+yyyy;
     return today;
 
 }

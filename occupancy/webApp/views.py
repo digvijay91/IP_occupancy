@@ -23,16 +23,28 @@ def index(request):
  current_time=current_time.strftime("%Y-%m-%d-%H:%M:%S")
  api_data_url = "https://192.168.1.40:9119/count?at="+current_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr&token="+auth_token
  print api_data_url
- c = pycurl.Curl()
- c.setopt(pycurl.URL, api_data_url)
- c.setopt(pycurl.SSL_VERIFYPEER, 0)
- c.setopt(pycurl.SSL_VERIFYHOST, 0)
- b = StringIO.StringIO()
- c.setopt(pycurl.WRITEFUNCTION, b.write)
- c.setopt(pycurl.FOLLOWLOCATION, 1)
- c.setopt(pycurl.MAXREDIRS, 5)
- c.perform()
- api_data = b.getvalue()
+ try:
+	 c = pycurl.Curl()
+	 c.setopt(pycurl.URL, api_data_url)
+	 c.setopt(pycurl.SSL_VERIFYPEER, 0)
+	 c.setopt(pycurl.SSL_VERIFYHOST, 0)
+	 b = StringIO.StringIO()
+	 c.setopt(pycurl.WRITEFUNCTION, b.write)
+	 c.setopt(pycurl.FOLLOWLOCATION, 1)
+	 c.setopt(pycurl.MAXREDIRS, 5)
+	 c.perform()
+	 api_data = b.getvalue()
+ except Exception:
+ 	 c = pycurl.Curl()
+	 c.setopt(pycurl.URL, api_data_url)
+	 c.setopt(pycurl.SSL_VERIFYPEER, 0)
+	 c.setopt(pycurl.SSL_VERIFYHOST, 0)
+	 b = StringIO.StringIO()
+	 c.setopt(pycurl.WRITEFUNCTION, b.write)
+	 c.setopt(pycurl.FOLLOWLOCATION, 1)
+	 c.setopt(pycurl.MAXREDIRS, 5)
+	 c.perform()
+	 api_data = b.getvalue()
  # api_data = json.loads(api_data)
  # return HttpResponse(api_data, mimetype = 'application/json')
  # template = loader.get_template('webApp/home.html')
@@ -75,7 +87,7 @@ def past_week_data(request,time):
 		for j in range(0,int(api_to_json["size"])):
 			dict = {}
 			#count = count + int(api_to_json["occupancy_information"][j]["count"])
-			dict["day"] = current_time.strftime("%A")
+			dict["day"] = current_time.strftime("%m/%d/%Y")
 			dict["building"] = api_to_json["occupancy_information"][j]["building"]
 			dict["floor"] = api_to_json["occupancy_information"][j]["floor"]
 			dict["wing"] = api_to_json["occupancy_information"][j]["wing"]
