@@ -9,7 +9,6 @@
 <link rel="stylesheet" type="text/css" href="../../static/webApp/css/dc.css" media="screen" /> 
 <link rel="stylesheet" type="test/css" href="../../static/webApp/css/main.css" media="screen"/>
 </head>
-<input type = "hidden" id = "api_data" value = "{{ api_data }}">
 <body>
 <!-- {{api_data}} -->
 <div id="all-container">
@@ -29,7 +28,14 @@
       </div>
       <div id="right-column">
         <form>
-          <div id = "time_form">Select Date and Time: <input type = "datetime-local" name = "userTime"><button type = "button" onclick="displaychart()">Go</button></div>
+          <div id = "time_form">Select Date and Time: <input type = "datetime-local" name = "userTime">
+          Choose Data type 
+          <select id="ChooseType">
+            <option value="">Select</option>
+            <option value="W">Over Past week</option>
+            <option value="M">Over Past Month(For a particular day)</option>
+          </select>
+          <button type = "button" onclick="displaychart()">Go</button></div>
         </form>
       </div>
     </div>

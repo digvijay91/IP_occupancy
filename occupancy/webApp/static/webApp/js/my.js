@@ -169,6 +169,8 @@ function displaychart(){
   weekday[5] = "Fri";
   weekday[6] = "Sat";
   t = $('input[name=userTime]');
+  type = $('#ChooseType').val();
+  console.log(type);
   var week_day;
   
   var current_time = new Date();
@@ -189,11 +191,11 @@ function displaychart(){
   }
   console.log(param_time);
   
-  
-  
-  // document.getElementById("showdate").innerHTML = param_time +"\n" + weekday[current_time.getDay()];
-  // console.log(weekday[current_time.getDay()]);
-  d3.csv("/template/past/"+param_time, function(error, data){
+  if (type == "W" || type == "")
+    url = "/template/past_week_data/";
+  else url = "/template/past_same_day/";
+
+  d3.csv(url+param_time, function(error, data){
 
       // console.log(data);
       ndx = crossfilter(data);
@@ -277,8 +279,11 @@ function displaychart(){
         .attr('text-anchor', 'middle')
         .attr('fill', 'white')
         .text(function(d){
-            var ind = chart_dates.indexOf(d3.select(d).data()[0].data.key);
-            return x_axis_params[ind];
+            if (type == "" || type == "W"){
+              var ind = chart_dates.indexOf(d3.select(d).data()[0].data.key);
+              return x_axis_params[ind];
+            }
+            else return weekday[week_day];
         })
         .attr('x', function(d){ 
             return +d.getAttribute('x') + (d.getAttribute('width')/2); 
@@ -434,18 +439,29 @@ function gen_xaxis(day,flag){
   var i = 0;
   var index;
   var temparray = new Array(7);
+  if (type != "M"){
+    for (i=0;i<7;i++){
+      if (flag==0)
+        var temp = new Date(param_time);
+      else var temp = new Date(t.val());
+      //console.log(temp);
+      if ((day-i)<0)
+        index = 7 + (day-i);
+      else index = day - i;
+      temparray[6 - i] = weekday[index];
+      temp.setDate(temp.getDate() - i);;
+      chart_dates[6-i] = formattime(temp);
+    }
+ }
+ else {
   for (i=0;i<7;i++){
-    if (flag==0)
-      var temp = new Date(param_time);
-    else var temp = new Date(t.val());
-    //console.log(temp);
-    if ((day-i)<0)
-      index = 7 + (day-i);
-    else index = day - i;
-    temparray[6 - i] = weekday[index];
-    temp.setDate(temp.getDate() - i);;
-    chart_dates[6-i] = formattime(temp);
-  }
+      if (flag==0)
+        var temp = new Date(param_time);
+      else var temp = new Date(t.val());
+      temp.setDate(temp.getDate() - i*7);;
+      chart_dates[6-i] = formattime(temp);
+    }
+ }
   console.log(temparray);
   console.log(chart_dates);
   return temparray;
@@ -465,108 +481,23 @@ function formattime(time){
     return today;
 
 }
-function displayDateChart() {
-  console.log("entered");
-   var $chart = $('#past-linechart'),
-   bar  = $chart.find('.bar');
+// function displayDateChart() {
+//   console.log("entered");
+//    var $chart = $('#past-linechart'),
+//    bar  = $chart.find('.bar');
    
-    bar.each(function (i, item) {
-        var bar_top    = 300;
-        var bar_left   = this.width.baseVal.value + this.width.baseVal.value/100 + 30;
-        var bar_offset_x = 30;
-        var bar_offset_y = 33;
+//     bar.each(function (i, item) {
+//         var bar_top    = 300;
+//         var bar_left   = this.width.baseVal.value + this.width.baseVal.value/100 + 30;
+//         var bar_offset_x = 30;
+//         var bar_offset_y = 33;
         
-        //var bar_val = $(this).find('title').html().split(':')[1];
-        var bar_val = chart_dates[i];
+//         //var bar_val = $(this).find('title').html().split(':')[1];
+//         var bar_val = chart_dates[i];
         
-        $chart.append('<div class="val" style="bottom:'+(bar_top+bar_offset_y)+'px;left:'+((bar_left*i)+(bar_offset_x))+'px;width:'+bar_left+'px">'+bar_val+'</div>');
+//         $chart.append('<div class="val" style="bottom:'+(bar_top+bar_offset_y)+'px;left:'+((bar_left*i)+(bar_offset_x))+'px;width:'+bar_left+'px">'+bar_val+'</div>');
                 
-    });
-}
-function myonload() {
-  displaychart();
-  // var api_data = document.getElementById("api_data").value;
-  // obj = JSON.parse(api_data);
-  // var ndx = crossfilter(obj.occupancy_information); 
-  // buildingDim = ndx.dimension(function(d){ return d.building;});
-  // var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
-  // var BuildingChart = dc.pieChart("#chart-building");
-  // console.log(total_count.top(1)[0].value);
+//     });
+// }
 
-  // floorDim = ndx.dimension(function(d){ if(d.floor == "") return "N/A"; return d.floor;});
-  // var floor_count = floorDim.group().reduceSum(function(d){return d.count;});
-  // FloorChart = dc.pieChart("#chart-floor");
-  // console.log(FloorChart);
-
-  // wingDim = ndx.dimension(function(d){ if(d.wing == "") return "N/A";return d.wing;});
-  // var wing_count = wingDim.group().reduceSum(function(d){return d.count;});
-  // WingChart = dc.pieChart("#chart-wing");
-
-  // classDim = ndx.dimension(function(d){ if(d.room == "") return "N/A"; return d.room;});
-  // class_count = classDim.group().reduceSum(function(d){return d.count;});
-  // classChart = dc.pieChart("#chart-room");
-  // console.log(classChart);
- 
-  // var legend_height = 200 / 7;
-  // var all = ndx.groupAll().reduceSum(function(d){ return d.count;}).value();
-  // all_floor = floorDim.groupAll().reduceSum(function(d){ return d.count;}).value();
-  // all_building = buildingDim.groupAll().reduceSum(function(d){ return d.count;}).value();
-  // curr_building = all_building;
-  // curr_floor = all_floor;
-  // document.getElementById("building-helper").innerHTML = "Building: " + all ;
-  // document.getElementById("floor-helper").innerHTML = "Floor: " + all ;
-  // document.getElementById("wing-helper").innerHTML = "Wing: " + all ;
-  // document.getElementById("room-helper").innerHTML = "Room: " + all ;
-//  initCounts(floorDim,);
-// console.log(all);
-  // BuildingChart.on("filtered",building_helper);
-  // FloorChart.on("filtered",floor_helper);
-  // WingChart.on("filtered",wing_helper);
-
- 
- // BuildingChart
- //  .width(200).height(200)
- //  .dimension(buildingDim)
- //  .group(total_count)
- //  .innerRadius(50)
- //  .renderLabel(true)
- //  .label(function (d){
- //    label = d.value;
- //    return label;
- //  })
- //  .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
- //  .ordinalColors(["#ffcccc", "#ff9999", "#ff6666", "#ff3333","#ff0000","#cc0000","#990000"]);
-
-  // FloorChart
-  // .width(200).height(200)
-  // .dimension(floorDim)
-  // .group(floor_count)
-  // .innerRadius(50)
-  // .renderLabel(true)
-  // .label(function (d){ return d.value;})
-  // //.label(buildingDim)
-  // .legend(dc.legend().x(205).y(10).itemHeight(200/9).gap(1))
-  // .ordinalColors(["#99ccff", "#66b3ff", "#3399ff", "#0080ff","#0066cc","#004d99","#003366"]);
-  // WingChart
-  // .width(200).height(200)
-  // .dimension(wingDim)
-  // .group(wing_count)
-  // .innerRadius(50)
-  // .renderLabel(true)
-  // //.label(buildingDim)
-  // .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
-  // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
-
-   // classChart
-   // .width(200).height(200)
-   // .dimension(classDim)
-   // .group(class_count)
-   // .innerRadius(50)
-   // .renderLabel(true)
-   // //.label(buildingDim)
-   // .legend(dc.legend().x(205).y(30).itemHeight(200/9).gap(2))
-   // .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"]);
-
-  // dc.renderAll();
-}
 
