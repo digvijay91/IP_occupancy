@@ -14,6 +14,7 @@ import os, csv
 
 def chart1(request):
  return render(request, 'webApp/home.html')
+ 	
 
 def chart2(request):
 	return render(request, 'webApp/chart2.html')
@@ -22,7 +23,6 @@ def chart2(request):
 
 def past_week_data(request,time):
 	# print time
-
 	current_time = datetime.strptime(time,"%Y-%m-%d-%H:%M:%S")
 	current_time= current_time - relativedelta(days = 7)
 	# print current_time
@@ -161,3 +161,30 @@ def month_average(request, time):
 	dict_writer.writer.writerow(keys)
 	dict_writer.writerows(list)
 	return response
+
+# def try1(request):
+# 	module_dir = os.path.dirname(__file__)
+# 	file_dir = os.path.join(module_dir,'token')
+# 	handle = open(file_dir,'r')
+# 	auth_token = handle.readline()
+# 	i = 60
+# 	time = date.today()
+# 	time = time.strftime("%Y-%m-%d-%H:%M:%S")
+# 	print "entered"
+# 	while(i>=0):
+# 		api_data_url = "https://192.168.1.40:9119/count?at=" + time + "&format=yyyy-mm-dd-hh24:mi:ss&type=b&token="+auth_token
+# 		c = pycurl.Curl()
+# 		c.setopt(pycurl.URL, api_data_url)
+# 		c.setopt(pycurl.SSL_VERIFYPEER, 0)
+# 		c.setopt(pycurl.SSL_VERIFYHOST, 0)
+# 		b = StringIO.StringIO()
+# 		c.setopt(pycurl.WRITEFUNCTION, b.write)
+# 		c.setopt(pycurl.FOLLOWLOCATION, 1)
+# 		c.setopt(pycurl.MAXREDIRS, 5)
+# 		c.perform()
+# 		api_data = b.getvalue()
+# 		api_to_json = json.loads(api_data)
+# 		i = i - 1
+# 		print i
+# 	print "done"
+# 	return HttpResponse("done")

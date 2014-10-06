@@ -5,6 +5,7 @@ from webApp import views
 
 urlpatterns = patterns('',
     url(r'^home/',views.chart1,name="index"),
+    # url(r'^try/',views.try1,name="try"),
     url(r'^chart1/',views.chart1,name="index"),
     url(r'^chart2/',views.chart2,name="chart2"),
     url(r'^past_week_data/(?P<time>.+)$',views.past_week_data, name = "past_week_data"),
