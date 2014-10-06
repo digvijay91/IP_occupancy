@@ -152,7 +152,7 @@ def month_average(request, time):
 		dict["day"] = temp_time
 		for j in range(0,int(api_to_json["size"])):
 			index = temp_array.index(api_to_json["occupancy_information"][j]["building"])
-			dict[key_index[api_to_json["occupancy_information"][j]["building"]]] = count[index]/3
+			dict[key_index[api_to_json["occupancy_information"][j]["building"]]] = count[index]/2
 		list.append(dict)
 		i=i-1
 	keys = ["day","Acad","BH","GH","L","R","SB","SC"]
