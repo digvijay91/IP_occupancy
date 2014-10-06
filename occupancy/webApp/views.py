@@ -130,6 +130,7 @@ def month_average(request, time):
 			url_time=temp_time.strftime("%Y-%m-%d-%H:%M:%S")
 	 		api_data_url = "https://192.168.1.40:9119/count?at="+url_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=b&token="+auth_token
 	 		# print api_data_url
+	 		# kl
 	 		c = pycurl.Curl()
 			c.setopt(pycurl.URL, api_data_url)
 			c.setopt(pycurl.SSL_VERIFYPEER, 0)
