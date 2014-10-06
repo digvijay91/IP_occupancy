@@ -55,6 +55,16 @@ body{
 */
 #middle{
   width:100%;
+  min-width:800px;
+  height:300px;
+  min-height:300px;
+  /*background-color:red;*/
+  display:inline-block;
+  margin: 0 auto;
+  float:left;
+}
+#middle2{
+  width:100%;
   min-width:1200px;
   height:300px;
   min-height:300px;
@@ -71,7 +81,7 @@ body{
   /*background-color:orange;*/
 }
 #middle-column{
-  height:400px;
+  height:200px;
   width:920px;
   display:inline-block;
   /*background:brown;*/
@@ -95,13 +105,42 @@ body{
 }
 #right-column{
   height:100%;
-  width:250px;
-  min-width:250px;
+  width:150px;
+  /*min-width:250px;*/
 /*  background:#e6e6e6;*/
   float:right;
   text-align:center;
   margin-left:auto;
   margin-right:auto;
+}
+#right-column2{
+  height:100%;
+  width:150px;
+  /*min-width:250px;*/
+/*  background:#e6e6e6;*/
+  /*float:right;*/
+  text-align:center;
+  margin-left:auto;
+  margin-right:auto;
+}
+#past-barchart{
+  height: 300px;
+  width: 500px;
+}
+
+#past-barchart .val {
+    position:absolute;
+    left:0;
+    bottom:0;
+    text-align: right;
+}
+
+#past-barchart svg{
+  width:800px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-left:2px;
+  padding-bottom:2px;
+
 }
 #past-linechart{
   height: 300px;
@@ -116,7 +155,7 @@ body{
 }
 
 #past-linechart svg{
-  width:800px;
+  width:1400px;
   font-family: Arial, Helvetica, sans-serif;
   padding-left:2px;
   padding-bottom:2px;

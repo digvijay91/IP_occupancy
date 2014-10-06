@@ -8,7 +8,10 @@ var chart_dates = new Array(7);
 var x_axis_params = new Array(7);
 $(document).ready(function(){
   
-  displaychart();
+  var flag = document.getElementById("hidden").value;
+  if(flag == "on")
+    displaychart1();
+  else displaychart2();
 
 });
 
@@ -159,7 +162,85 @@ function chain_chart(schart){
     chain_chart(title_text[node+1]);
 }
 
-function displaychart(){
+function displaychart2(){
+  t = $('input[name=userTime]');
+  var current_time = new Date();
+  var month = parseInt(current_time.getMonth()) + 1;
+  if (t.val() == ""){
+    param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
+  }
+  else {
+    param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()
+    param_time = param_time +'-' + t.val();
+    param_time = param_time.replace('T','-');
+    param_time = param_time + ":00";
+  }
+  console.log(param_time);
+  d3.csv("/template/month_average/" + param_time, function(error,data){
+    ndx = crossfilter(data);
+    // print_filter(ndx);
+    var BH = "Boy's Hostel";
+    var format = d3.time.format("%Y-%m-%d %H:%M:%S");
+    var dayDim = ndx.dimension(function(d) {return format.parse(d.day);});
+    var A_day_count = dayDim.group().reduceSum(function(d){return d.Acad;});
+    var BH_day_count = dayDim.group().reduceSum(function(d){return d.BH;});
+    var GH_day_count = dayDim.group().reduceSum(function(d){return d.GH;});
+    var L_day_count = dayDim.group().reduceSum(function(d){return d.L;});
+    var R_day_count = dayDim.group().reduceSum(function(d){return d.R;});
+    var SC_day_count = dayDim.group().reduceSum(function(d){return d.SC;});
+    var SB_day_count = dayDim.group().reduceSum(function(d){return d.SB;});
+    // print_filter(BH_day_count);
+    var minDate = (new Date(dayDim.bottom(1)[0].day));
+    var maxDate = (new Date(dayDim.top(1)[0].day));
+    console.log(minDate);
+    console.log(maxDate);
+    var past_linechart = dc.compositeChart("#past-linechart");
+    past_linechart
+      // .xUnits(dc.units.ordinal)
+      .width(1100).height(300)
+      // .margins({top: 5, left: 10, right: 10, bottom: 20})
+      // .useYBaseline(true)
+      .dimension(dayDim)
+      // .x(d3.time.scale().domain(d3.extent(data, function(d) { return d.day; })))
+      // .x(d3.scale.ordinal().range([minDate,maxDate]))
+      .x(d3.time.scale().domain([minDate,maxDate]))
+      .y(d3.scale.linear())
+      .brushOn(false)
+      .title(function(d){
+      return d.key
+      + "\nNumber of People: " + d.value;
+      })
+      .xAxisLabel("Date")
+      .yAxisLabel("Devices in Campus (approx)")
+      .transitionDuration(500)
+      // .renderArea(true)
+      .legend(dc.legend().x(1100).y(10).itemHeight(13).gap(5))
+      // .centerBar(true)    
+      // .gap(60)
+      .elasticY(true)
+      .valueAccessor(function (d) {
+        return d.value;
+      });
+      // .xAxisPadding(10)
+      // .xAxis();
+      past_linechart.compose([
+        dc.lineChart(past_linechart).group(A_day_count, "Academic").colors('red'),
+        dc.lineChart(past_linechart).group(BH_day_count,"Boy's Hostel").colors('blue'),
+        dc.lineChart(past_linechart).group(GH_day_count,"Girl's Hostel").colors('green'),
+        dc.lineChart(past_linechart).group(R_day_count,"Residence").colors('yellow'),
+        dc.lineChart(past_linechart).group(L_day_count,"Library").colors('black'),
+        dc.lineChart(past_linechart).group(SC_day_count,"Service Block").colors('orange'),
+        dc.lineChart(past_linechart).group(SB_day_count,"Service Centre").colors('gray')
+      ])
+      ;
+
+      dc.renderAll();
+  });
+
+// console.log("done");
+}
+
+function displaychart1(){
   
   weekday[0]=  "Sun";
   weekday[1] = "Mon";
@@ -170,7 +251,7 @@ function displaychart(){
   weekday[6] = "Sat";
   t = $('input[name=userTime]');
   type = $('#ChooseType').val();
-  console.log(type);
+  // console.log(type);
   var week_day;
   
   var current_time = new Date();
@@ -185,7 +266,7 @@ function displaychart(){
     param_time = param_time.replace('T','-');
     param_time = param_time + ":00";
     var for_day = new Date(t.val());
-    console.log(for_day);
+    // console.log(for_day);
     week_day = for_day.getDay();
     x_axis_params =  gen_xaxis(week_day,1);
   }
@@ -201,7 +282,7 @@ function displaychart(){
       ndx = crossfilter(data);
       var dayDim = ndx.dimension(function(d) {return d.day;});
       var day_count = dayDim.group().reduceSum(function(d){return d.count;});
-      var past_linechart = dc.barChart("#past-linechart");
+      var past_linechart = dc.barChart("#past-barchart");
       buildingDim = ndx.dimension(function(d){ return d.building;});
       var total_count = buildingDim.group().reduceSum(function(d){ return d.count;});
       BuildingChart = dc.pieChart("#chart-building");
@@ -216,7 +297,7 @@ function displaychart(){
       classDim = ndx.dimension(function(d){ if(d.room == "") return "N/A"; return d.room;});
       class_count = classDim.group().reduceSum(function(d){return d.count;});
       classChart = dc.pieChart("#chart-room");
-      d3.select('#past-linechart').selectAll("rect.bar").append("text").text(function(d){return d.count;})
+      d3.select('#past-barchart').selectAll("rect.bar").append("text").text(function(d){return d.count;})
 
       // document.getElementById("building-helper").innerHTML = "Building: " + all;
       // document.getElementById("floor-helper").innerHTML = "Floor: " + all ;
@@ -382,7 +463,7 @@ function displaychart(){
             .ordinalColors(["#1a3300", "#336600", "#4c9900", "#66cc00","#339900","#008000"])
             .on("filtered",function(chart,filter){
             if(filter != null){
-              console.log(chart.filters());
+              // console.log(chart.filters());
               if(chart.filters().length == 0){
                 chart.filterAll();
                 chain_chart("Room");
@@ -410,7 +491,7 @@ function displaychart(){
              .legend(dc.legend().x(205).y(20).itemHeight(200/9).gap(2))
              .on("filtered",function(chart,filter){
               if(filter != null){
-                console.log(chart.filters());
+                // console.log(chart.filters());
                 if(chart.filters().length == 0){
                   chart.filterAll();
                   }
@@ -462,8 +543,8 @@ function gen_xaxis(day,flag){
       chart_dates[6-i] = formattime(temp);
     }
  }
-  console.log(temparray);
-  console.log(chart_dates);
+  // console.log(temparray);
+  // console.log(chart_dates);
   return temparray;
 }
 function formattime(time){
