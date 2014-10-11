@@ -15,7 +15,7 @@
 <link rel="stylesheet" type="test/css" href="../../static/webApp/css/main.css" media="screen"/>
 </head>
 <body>
-  <input type = "hidden" id = "hidden" value = "on">
+	<input type = "hidden" id = "hidden" value = "off">
   <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -32,50 +32,30 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class = "active"><a href="/template/chart1/">Chart1</a></li>
-        <li><a href="/template/chart2/">chart2</a></li>
+        <li><a href="/template/chart1/">Chart1</a></li>
+        <li class = "active"><a href="/template/chart2/">chart2</a></li>
         
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<!-- {{api_data}} -->
 <div id="all-container">
   <!-- <div id="header-div">Header</div> -->
   <div id="main-container">
     <!-- <div id="left-column">
     </div> -->
-    <div id="middle">
+    <div id="middle2">
       <div id="middle-column">
-      <!-- <div id="top-row">
-        <div id="building-helper"></div>
-        <div id="floor-helper"></div>
-        <div id="wing-helper"></div>
-        <div id="room-helper"></div>
-      </div> -->
-        <div id = "past-barchart"></div>
+        <div id = "past-linechart"></div>
       </div>
-      <div id="right-column">
+      <div id="right-column2">
         <form>
-          <div id = "time_form">Select Date and Time: <input type = "datetime-local" name = "userTime">
-          Choose Data type 
-          <select id="ChooseType">
-            <option value="">Select</option>
-            <option value="W">Over Past week</option>
-            <option value="M">Over Past Month(For a particular day)</option>
-          </select>
-          <button type = "button" onclick="displaychart1()">Go</button></div>
+          <div id = "time_form">Select Time: <input type = "time" name = "userTime">
+          <button type = "button" onclick="displaychart2()">Go</button></div>
         </form>
       </div>
     </div>
-    <div id="bottom-column"> 
-      <div id="chart-building"><div class="chart-title">Building</div></div>
-      <div id="chart-floor"><div class="chart-title">Floor</div></div>
-      <div id="chart-wing"><div class="chart-title">Wing</div></div>
-      <div id="chart-room"><div class="chart-title">Room</div></div>
-    </div> 
   </div>
 </div>
-<!-- <div id ="showdate"></div> -->
 </body>
 </html>
