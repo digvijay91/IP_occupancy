@@ -36,6 +36,7 @@ def past_week_data(request,time):
 		current_time= current_time + relativedelta(days = 1)
 		url_time=current_time.strftime("%Y-%m-%d-%H:%M:%S")
  		api_data_url = "https://192.168.1.40:9119/count?at="+url_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr&token="+auth_token
+ 		print api_data_url
  		c = pycurl.Curl()
 		c.setopt(pycurl.URL, api_data_url)
 		c.setopt(pycurl.SSL_VERIFYPEER, 0)

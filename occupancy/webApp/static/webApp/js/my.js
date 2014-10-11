@@ -260,13 +260,15 @@ function displaychart1(){
     param_time = current_time.getFullYear()+'-'+ month+'-'+current_time.getDate()+'-'+current_time.getHours()+':'+current_time.getMinutes()+':'+current_time.getSeconds();
     week_day = current_time.getDay();
     x_axis_params =  gen_xaxis(week_day,0);
+    console.log(Date(param_time));
   }
   else {
     param_time = t.val();
     param_time = param_time.replace('T','-');
     param_time = param_time + ":00";
     var for_day = new Date(t.val());
-    // console.log(for_day);
+     console.log(for_day);
+     console.log(param_time);
     week_day = for_day.getDay();
     x_axis_params =  gen_xaxis(week_day,1);
   }
@@ -522,8 +524,10 @@ function gen_xaxis(day,flag){
   var temparray = new Array(7);
   if (type != "M"){
     for (i=0;i<7;i++){
-      if (flag==0)
-        var temp = new Date(param_time);
+      if (flag==0){
+        var temp = Date(param_time);
+        temp = new Date(temp);
+      }
       else var temp = new Date(t.val());
       //console.log(temp);
       if ((day-i)<0)
@@ -536,8 +540,10 @@ function gen_xaxis(day,flag){
  }
  else {
   for (i=0;i<7;i++){
-      if (flag==0)
-        var temp = new Date(param_time);
+      if (flag==0){
+        var temp = Date(param_time);
+        temp = new Date(temp);
+      }
       else var temp = new Date(t.val());
       temp.setDate(temp.getDate() - i*7);;
       chart_dates[6-i] = formattime(temp);
