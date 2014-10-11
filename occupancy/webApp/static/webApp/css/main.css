@@ -34,6 +34,12 @@ body{
   margin: 0;
 /*overflow:hidden;*/
 }
+
+#table-container{
+  width:90%;
+  min-height:100%;
+  margin: 0;
+}
 #header-div{
   /*background-color: violet;*/
   height:100px;

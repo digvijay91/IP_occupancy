@@ -6,12 +6,20 @@ var weekday = new Array(7);
 var param_time, t;
 var chart_dates = new Array(7);
 var x_axis_params = new Array(7);
+var minDate = "";
 $(document).ready(function(){
   
   var flag = document.getElementById("hidden").value;
   if(flag == "on")
     displaychart1();
-  else displaychart2();
+  else{
+    displaychart2();
+    // while (minDate == ""){
+    //   // console.log("entered");
+    // }
+
+    $('#overlay').fadeOut(20000);
+  }
 
 });
 
@@ -190,7 +198,7 @@ function displaychart2(){
     var SC_day_count = dayDim.group().reduceSum(function(d){return d.SC;});
     var SB_day_count = dayDim.group().reduceSum(function(d){return d.SB;});
     // print_filter(BH_day_count);
-    var minDate = (new Date(dayDim.bottom(1)[0].day));
+    minDate = (new Date(dayDim.bottom(1)[0].day));
     var maxDate = (new Date(dayDim.top(1)[0].day));
     console.log(minDate);
     console.log(maxDate);
@@ -236,7 +244,7 @@ function displaychart2(){
 
       dc.renderAll();
   });
-
+  
 // console.log("done");
 }
 

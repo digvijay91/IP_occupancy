@@ -18,6 +18,28 @@ def chart1(request):
 
 def chart2(request):
 	return render(request, 'webApp/chart2.html')
+
+def attendance(request):
+	today = date.today()
+	last_date = today - relativedelta(days=31)
+	print str(today)
+	module_dir = os.path.dirname(__file__) # get current directory
+	file_dir = os.path.join(module_dir,'token')
+	handle = open(file_dir,'r')
+	auth_token = handle.readline()
+	api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(last_date) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
+	c = pycurl.Curl()
+	c.setopt(pycurl.URL, api_data_url)
+	c.setopt(pycurl.SSL_VERIFYPEER, 0)
+	c.setopt(pycurl.SSL_VERIFYHOST, 0)
+	b = StringIO.StringIO()
+	c.setopt(pycurl.WRITEFUNCTION, b.write)
+	c.setopt(pycurl.FOLLOWLOCATION, 1)
+	c.setopt(pycurl.MAXREDIRS, 5)
+	c.perform()
+	api_data = b.getvalue()
+	api_to_json = json.loads(api_data)
+	return render(request,'webApp/attendance.html',{'json': api_data	})
 	
 
 
