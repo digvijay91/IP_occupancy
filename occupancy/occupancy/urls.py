@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^template/',include('webApp.urls')),
     url(r'^attendance/$',include('attendance.urls')),
-    url(r'^oauth/', include ('oauth_provider.urls')),
+    # url(r'^oauth/', include ('oauth_provider.urls')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
 )
 
