@@ -37,6 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webApp',
+    'attendance',
+    'social.apps.django_app.default',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -47,6 +49,26 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+   'django.contrib.auth.context_processors.auth',
+   'django.core.context_processors.debug',
+   'django.core.context_processors.i18n',
+   'django.core.context_processors.media',
+   'django.core.context_processors.static',
+   'django.core.context_processors.tz',
+   'django.contrib.messages.context_processors.messages',
+   'social.apps.django_app.context_processors.backends',
+   'social.apps.django_app.context_processors.login_redirect',
+)
+
+AUTHENTICATION_BACKENDS = (
+   'social.backends.facebook.FacebookOAuth2',
+   'social.backends.google.GoogleOAuth2',
+   'social.backends.twitter.TwitterOAuth',
+   'django.contrib.auth.backends.ModelBackend',
+)
+
 
 ROOT_URLCONF = 'occupancy.urls'
 
@@ -89,3 +111,9 @@ STATIC_URL = '/static/'
 # from django.core.management import call_command
 
 # call_command('get_token')
+
+TEMPLATE_DIRS = [os.path.join(BASE_DIR,'templates')]
+
+LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '276185264104-16gdm03v5ndupj0b0koufevv6ul72sqd.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'WUoxaJ7nf2OyhJ6nssZcjEnp'
