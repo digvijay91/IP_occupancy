@@ -14,7 +14,13 @@
 <script>
 
 	$(document).ready(function() {
-		
+     $('#contact').click(function() {
+      $('#popup').slideToggle("fast");
+    });
+    $('#popup').click(function(){
+      $(this).slideToggle("fast");
+    });  
+
 		$('#calendar').fullCalendar({
 			header: {
 				left: '',
@@ -103,7 +109,26 @@
     text-decoration:none;
     color:inherit;
   }
-   
+   #popup{
+    height:100px;
+    width:400px;
+    display:none;
+    position:absolute;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:20%;
+    background-color:white;
+    z-index:10220;
+    font-size:20px;
+    padding:5px;
+    text-align:center;
+    border:1px solid grey;
+    cursor:pointer;
+    line-height:33px;
+  }
+    
 
 </style>
 </head>
@@ -117,7 +142,7 @@
       <div class='nav-element'>{{ user.email }}</div>
       <div class='nav-element'></div>
 
-      <div class='nav-element highlight'>About</div>
+      <div id='contact' class='nav-element highlight'>Contact</div>
       <div class='nav-element highlight'>
       {% if user and not user.is_anonymous %}
       <a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>
