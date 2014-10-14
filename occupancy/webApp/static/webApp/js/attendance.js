@@ -9,6 +9,7 @@ var rollno = new Array();
 var attendance;
 var uniquerollno;
 var length_col;
+var numberdays;
 
 function dynamictable(){
 	generate_header();
@@ -31,11 +32,12 @@ function dynamictable(){
 	uniquerollno.sort();
 	console.log(uniquerollno);
 	create_2d();
+	console.log(attendance);
 	var body = table.appendChild(document.createElement('tbody'));
 	for(i=0;i<attendance.length;i++){
 		var row_b = body.insertRow(i);
 		row_b.insertCell(0).innerHTML = uniquerollno[i];
-		for(j=0;j<length_col + 1;j++){
+		for(j=0;j<numberdays;j++){
 			if (inArray(attendance[i],header_dates[j]))
 				row_b.insertCell(j + 1).innerHTML = "Present";
 			else 
@@ -47,11 +49,12 @@ function dynamictable(){
 function generate_header(){
 	var long_months = new Array(0,2,4,6,7,9,11);
 	var head_date = new Date();
-	head_date.setMonth(head_date.getMonth() - 1);
-	if (inArray(long_months,head_date.getMonth()))
-		length_col = 31;
-	else length_col = 30;
-	for (i=0;i<length_col + 1;i++){
+	numberdays = head_date.getDate() - 1;
+	head_date.setDate(1);
+	// if (inArray(long_months,head_date.getMonth()))
+	// 	length_col = 31;
+	// else length_col = 30;
+	for (i=0;i<numberdays;i++){
 		header_dates.push(date_to_string(head_date));
 			if (head_date.getDate() == length_col){
 				head_date.setMonth(parseInt(head_date.getMonth()) + 1);

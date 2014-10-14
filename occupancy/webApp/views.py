@@ -21,13 +21,15 @@ def chart2(request):
 
 def attendance(request):
 	today = date.today()
-	last_date = today - relativedelta(days=31)
+	today = today -  relativedelta(days = 1)
+	last_date = today - relativedelta(days = today.day - 1)
 	print str(today)
 	module_dir = os.path.dirname(__file__) # get current directory
 	file_dir = os.path.join(module_dir,'token')
 	handle = open(file_dir,'r')
 	auth_token = handle.readline()
 	api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(last_date) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
+	print api_data_url
 	c = pycurl.Curl()
 	c.setopt(pycurl.URL, api_data_url)
 	c.setopt(pycurl.SSL_VERIFYPEER, 0)
