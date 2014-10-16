@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.template import RequestContext, loader
+from webApp.models import *
 from time import strftime
 from datetime import *
 from dateutil.relativedelta import relativedelta
 from django.http import HttpResponse
 from django.utils import simplejson
+from django.core.serializers.json import DjangoJSONEncoder
 import pycurl
 import json
 import StringIO
@@ -23,25 +25,41 @@ def attendance(request):
 	today = date.today()
 	today = today -  relativedelta(days = 1)
 	last_date = today - relativedelta(days = today.day - 1)
-	print str(today)
-	module_dir = os.path.dirname(__file__) # get current directory
-	file_dir = os.path.join(module_dir,'token')
-	handle = open(file_dir,'r')
-	auth_token = handle.readline()
-	api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(last_date) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
-	print api_data_url
-	c = pycurl.Curl()
-	c.setopt(pycurl.URL, api_data_url)
-	c.setopt(pycurl.SSL_VERIFYPEER, 0)
-	c.setopt(pycurl.SSL_VERIFYHOST, 0)
-	b = StringIO.StringIO()
-	c.setopt(pycurl.WRITEFUNCTION, b.write)
-	c.setopt(pycurl.FOLLOWLOCATION, 1)
-	c.setopt(pycurl.MAXREDIRS, 5)
-	c.perform()
-	api_data = b.getvalue()
-	api_to_json = json.loads(api_data)
-	return render(request,'webApp/attendance.html',{'json': api_data	})
+	# # print str(today)
+	# module_dir = os.path.dirname(__file__) # get current directory
+	# file_dir = os.path.join(module_dir,'token')
+	# handle = open(file_dir,'r')
+	# auth_token = handle.readline()
+	# api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(last_date) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
+	# print api_data_url
+	# c = pycurl.Curl()
+	# c.setopt(pycurl.URL, api_data_url)
+	# c.setopt(pycurl.SSL_VERIFYPEER, 0)
+	# c.setopt(pycurl.SSL_VERIFYHOST, 0)
+	# b = StringIO.StringIO()
+	# c.setopt(pycurl.WRITEFUNCTION, b.write)
+	# c.setopt(pycurl.FOLLOWLOCATION, 1)
+	# c.setopt(pycurl.MAXREDIRS, 5)
+	# c.perform()
+	# api_data = b.getvalue()
+	# api_to_json = json.loads(api_data)
+	list = []
+	final_json = {}
+	temp_today = date.today()
+	while(str(last_date) != str(temp_today)):
+		objects = Attendance.objects.filter(date = last_date)
+		print 
+		for o in objects:
+			dict = {}
+			print o.roll_number
+			dict["rollno"] = o.roll_number
+			dict["date"] = o.date.strftime("%Y-%m-%d")
+			list.append(dict)
+		last_date = last_date + relativedelta(days = 1)
+	final_json["attendance"] =  list
+	send = json.dumps(final_json, cls=DjangoJSONEncoder)
+	print send
+	return render(request,'webApp/attendance.html',{'json': send	})
 	
 
 
