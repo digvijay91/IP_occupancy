@@ -18,7 +18,7 @@ $(document).ready(function(){
     //   // console.log("entered");
     // }
 
-    $('#overlay').fadeOut(20000);
+    $('#overlay').fadeOut(6000);
   }
 
 });

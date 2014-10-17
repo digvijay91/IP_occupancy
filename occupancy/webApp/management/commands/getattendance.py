@@ -18,11 +18,11 @@ class Command(BaseCommand):
 		today = date.today()
 		today = today -  relativedelta(days = 1)
 		last_date = today - relativedelta(days = today.day - 1)
-		module_dir = os.path.dirname("/media/ayush/@yush/engineering/django/IP/IP_occupancy/occupancy/webApp/")
+		module_dir = os.path.dirname("/home/occupancy/Downloads/IP_occupancy/occupancy/webApp/")
 		file_dir = os.path.join(module_dir,'token')
 		handle = open(file_dir,'r')
 		auth_token = handle.readline()
-		api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(today) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
+		api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(last_date) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
 		c = pycurl.Curl()
 		c.setopt(pycurl.URL, api_data_url)
 		c.setopt(pycurl.SSL_VERIFYPEER, 0)
@@ -39,3 +39,4 @@ class Command(BaseCommand):
 			dateObj = datetime.strptime(api_to_json["attendance"][i]["date"], "%Y-%m-%d")
 			attendance_object = Attendance(roll_number = api_to_json["attendance"][i]["rollno"], date = api_to_json["attendance"][i]["date"])
 			attendance_object.save()
+
