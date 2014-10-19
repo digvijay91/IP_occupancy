@@ -1,6 +1,8 @@
 $(document).ready( function () {
 	dynamictable();
-    $('#table_id').DataTable();
+    $('#table_id').DataTable({
+    	ordering: false
+    });
     
 } );
 
@@ -30,20 +32,33 @@ function dynamictable(){
     	if($.inArray(el, uniquerollno) === -1) uniquerollno.push(el);
 	});
 	uniquerollno.sort();
-	console.log(uniquerollno);
+	// console.log(uniquerollno);
 	create_2d();
-	console.log(attendance);
+	// console.log(attendance);
+	var count_array = new Array(numberdays);
+	for (i=0;i<numberdays;i++)
+		count_array[i] = 0;
 	var body = table.appendChild(document.createElement('tbody'));
 	for(i=0;i<attendance.length;i++){
 		var row_b = body.insertRow(i);
 		row_b.insertCell(0).innerHTML = uniquerollno[i];
 		for(j=0;j<numberdays;j++){
-			if (inArray(attendance[i],header_dates[j]))
+			if (inArray(attendance[i],header_dates[j])){
 				row_b.insertCell(j + 1).innerHTML = "Present";
+				count_array[j] = count_array[j] + 1;
+			}
 			else 
 				row_b.insertCell(j + 1).innerHTML = "Absent";
 		}
 	}
+	// var tbody_ref = table.getElementsByTagName('tbody')[0];
+	// var count_insert = tbody_ref.insertRow(tbody_ref.rows.length);
+	var count_insert = body.insertRow(0);
+	count_insert.insertCell(0).innerHTML = "Count";
+	for (i=0;i<count_array.length;i++){
+		count_insert.insertCell(i+1).innerHTML = count_array[i];
+	}
+	console.log(count_array);
 }
 
 function generate_header(){
@@ -64,7 +79,7 @@ function generate_header(){
 		
 
 	}
-	console.log(header_dates);
+	// console.log(header_dates);
 	
 
 }
@@ -98,5 +113,5 @@ function create_2d(){
 		var index = uniquerollno.indexOf(json_data.attendance[i].rollno);
 		attendance[index].push(json_data.attendance[i].date);
 	}
-	console.log(attendance);
+	// console.log(attendance);
 }
