@@ -19,8 +19,9 @@ function dynamictable(){
 	var header = table.createTHead();
 	var row1 = header.insertRow(0);
 	row1.insertCell(0).innerHTML = "Roll No";
+	row1.insertCell(1).innerHTML = "Count(per TA)";
 	for(i=0;i<header_dates.length;i++){
-		row1.insertCell(i+1).innerHTML = header_dates[i];
+		row1.insertCell(i+2).innerHTML = header_dates[i];
 	}
 	var temp = document.getElementById("json").value;
 	var json_data = JSON.parse(temp);
@@ -32,9 +33,9 @@ function dynamictable(){
     	if($.inArray(el, uniquerollno) === -1) uniquerollno.push(el);
 	});
 	uniquerollno.sort();
-	// console.log(uniquerollno);
+	console.log(uniquerollno);
 	create_2d();
-	// console.log(attendance);
+	console.log(attendance);
 	var count_array = new Array(numberdays);
 	for (i=0;i<numberdays;i++)
 		count_array[i] = 0;
@@ -42,21 +43,23 @@ function dynamictable(){
 	for(i=0;i<attendance.length;i++){
 		var row_b = body.insertRow(i);
 		row_b.insertCell(0).innerHTML = uniquerollno[i];
+		row_b.insertCell(1).innerHTML = attendance[i].length;
 		for(j=0;j<numberdays;j++){
 			if (inArray(attendance[i],header_dates[j])){
-				row_b.insertCell(j + 1).innerHTML = "Present";
+				row_b.insertCell(j + 2).innerHTML = "Present";
 				count_array[j] = count_array[j] + 1;
 			}
 			else 
-				row_b.insertCell(j + 1).innerHTML = "Absent";
+				row_b.insertCell(j + 2).innerHTML = "Absent";
 		}
 	}
 	// var tbody_ref = table.getElementsByTagName('tbody')[0];
 	// var count_insert = tbody_ref.insertRow(tbody_ref.rows.length);
 	var count_insert = body.insertRow(0);
-	count_insert.insertCell(0).innerHTML = "Count";
+	count_insert.insertCell(0).innerHTML = "Count(of All TAs)";
+	count_insert.insertCell(1).innerHTML = " ";
 	for (i=0;i<count_array.length;i++){
-		count_insert.insertCell(i+1).innerHTML = count_array[i];
+		count_insert.insertCell(i+2).innerHTML = count_array[i];
 	}
 	console.log(count_array);
 }
