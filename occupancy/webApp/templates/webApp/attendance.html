@@ -16,6 +16,14 @@
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../../static/webApp/js/attendance.js"></script>
+<style>
+#CSVbutton{
+  height: 30px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+</style>
 </head>
 <body>
 	<input type = "hidden" id = "json" value = "{{json}}">
@@ -38,15 +46,32 @@
         <li><a href="/template/chart1/">Chart1</a></li>
         <li><a href="/template/chart2/">chart2</a></li>
         <li class = "active"><a href="/template/attendance/">TA Attendance</a></li>
-        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <!-- <li>{{user.username}}</li> -->
+        {% if user and not user.is_anonymous %}
+        <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
+        {% else %}
+        <li><a href = "{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login
+        </a></li>
+        {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+<!-- <button type = "button" id = "CSVbutton" onClick = "/template/chart1/"> Download as CSV</button> -->
+<!-- <a href "/template/chart1">CLickMe</a> -->
+{% if user and user.username == "Ayush12029" or user.username == "Psingh" %}
+
+<form id = "CSVbutton" action = "/template/attendance_CSV">
+  <input type  = "submit" value = "Download as CSV">
+</form>
+{% endif %}
 	<div id = "table-container" class ="display">
 		<table id="table_id" class="display">
  
 		</table>
 	</div>
+
 </body>
 </html>

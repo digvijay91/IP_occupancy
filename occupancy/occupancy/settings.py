@@ -27,6 +27,7 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -119,6 +120,6 @@ STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR,'templates')]
 
-LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '276185264104-16gdm03v5ndupj0b0koufevv6ul72sqd.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'WUoxaJ7nf2OyhJ6nssZcjEnp'
+# LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '866084511495-t9gbkd9spp1v5ioapep79vvqfdqkp54g.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'r6XH4ShKNMuhUotATFG-1sIz'

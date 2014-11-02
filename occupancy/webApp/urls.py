@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^past_week_data/(?P<time>.+)$',views.past_week_data, name = "past_week_data"),
     url(r'^past_same_day/(?P<time>.+)$',views.past_same_day, name = "past_same_day"),
     url(r'^month_average/(?P<time>.+)$',views.month_average, name = "month_average"),
+    url(r'^attendance_CSV/',views.attendance_CSV, name = "attendance_CSV"),
     
 )
 

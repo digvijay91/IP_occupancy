@@ -43,24 +43,63 @@ def attendance(request):
 	# c.perform()
 	# api_data = b.getvalue()
 	# api_to_json = json.loads(api_data)
-	list = []
-	final_json = {}
-	temp_today = date.today()
-	while(str(last_date) != str(temp_today)):
-		objects = Attendance.objects.filter(date = last_date)
-		print 
-		for o in objects:
-			dict = {}
-			print o.roll_number
-			dict["rollno"] = o.roll_number
-			dict["date"] = o.date.strftime("%Y-%m-%d")
-			list.append(dict)
-		last_date = last_date + relativedelta(days = 1)
-	final_json["attendance"] =  list
-	send = json.dumps(final_json, cls=DjangoJSONEncoder)
-	print send
-	return render(request,'webApp/attendance.html',{'json': send	})
+	send = ""
+	print request.user.username
+	if request.user and (request.user.username == "Ayush12029" or request.user.username == "Psingh") :
+		list = []
+		final_json = {}
+		temp_today = date.today()
+		while(str(last_date) != str(temp_today)):
+			objects = Attendance.objects.filter(date = last_date)
+			
+			for o in objects:
+				dict = {}
+				# print o.roll_number
+				dict["rollno"] = o.roll_number
+				dict["date"] = o.date.strftime("%Y-%m-%d")
+				list.append(dict)
+			last_date = last_date + relativedelta(days = 1)
+		final_json["attendance"] =  list
+		send = json.dumps(final_json, cls=DjangoJSONEncoder)
+		
+	return render(request,'webApp/attendance.html',{'json': send, 'request':request,'user':request.user})
 	
+
+def attendance_CSV(request):
+	today = date.today()
+	today = today -  relativedelta(days = 1)
+	last_date = today - relativedelta(days = today.day - 1)
+	temp_today = date.today()
+	key_dates = []
+	list_of_dicts = []
+	size = 0
+	while(str(last_date)!= str(temp_today)):
+		objects = Attendance.objects.filter(date = last_date)
+		if (len(objects) > size):
+			size = len(objects)
+		last_date = last_date + relativedelta(days = 1)
+	last_date = today - relativedelta(days = today.day - 1)
+
+	for i in range(size):
+		dict = {}
+		list_of_dicts.append(dict)
+	# print list_of_dicts
+	while(str(last_date)!= str(temp_today)):
+		key_dates.append(last_date)
+		objects = Attendance.objects.filter(date = last_date)
+		i = 0
+		for o in objects:
+			print list_of_dicts[i]
+			list_of_dicts[i][last_date] = o.roll_number
+			i = i + 1
+		last_date = last_date + relativedelta(days = 1)
+	response = HttpResponse(content_type = "text/csv")
+	response['Content-Disposition'] = 'attachment; filename="TA_Attendance.csv"'
+	dict_writer = csv.DictWriter(response, key_dates)
+	dict_writer.writer.writerow(key_dates)
+	dict_writer.writerows(list_of_dicts)
+	return response
+
 
 
 def past_week_data(request,time):

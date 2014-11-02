@@ -9,7 +9,7 @@ import StringIO
 
 def index(request):
   dates = []
-  if request.user and not request.user.is_anonymous :
+  if request.user and not request.user.is_authenticated :
     ### Code to read token from file ###
     module_dir = os.path.dirname(__file__) # get current directory
     file_dir = os.path.join(module_dir,'token')
