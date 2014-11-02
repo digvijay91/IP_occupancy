@@ -16,6 +16,11 @@
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../../static/webApp/js/attendance.js"></script>
+<script>
+function alertBox() {
+    alert("I am an alert box!");
+}
+</script>
 <style>
 #CSVbutton{
   height: 30px;
@@ -66,10 +71,15 @@
 <form id = "CSVbutton" action = "/template/attendance_CSV">
   <input type  = "submit" value = "Download as CSV">
 </form>
-{% endif %}
+
 	<div id = "table-container" class ="display">
 		<table id="table_id" class="display">
- 
+  {% elif user.username != "" %}
+    <p class = "lead">You are not yet authorized to view this data yet</p>
+  {% else %}
+    <p class = "lead">Login to view the data</p>
+
+{% endif %}
 		</table>
 	</div>
 
