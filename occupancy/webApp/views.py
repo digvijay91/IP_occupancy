@@ -44,25 +44,29 @@ def attendance(request):
 	# api_data = b.getvalue()
 	# api_to_json = json.loads(api_data)
 	send = ""
-	print request.user.username
-	if request.user and (request.user.username == "Ayush12029" or request.user.username == "Psingh") :
-		list = []
-		final_json = {}
-		temp_today = date.today()
-		while(str(last_date) != str(temp_today)):
-			objects = Attendance.objects.filter(date = last_date)
-			
-			for o in objects:
-				dict = {}
-				# print o.roll_number
-				dict["rollno"] = o.roll_number
-				dict["date"] = o.date.strftime("%Y-%m-%d")
-				list.append(dict)
-			last_date = last_date + relativedelta(days = 1)
-		final_json["attendance"] =  list
-		send = json.dumps(final_json, cls=DjangoJSONEncoder)
+	Access = 0
+	print request.user
+	if request.user.is_authenticated():
+		if request.user.email == "Ayush12029@iiitd.ac.in" or request.user.email == "psingh@iiitd.ac.in" or request.user.email == "digvijay09020@iiitd.ac.in":
+			print request.user.email
+			list = []
+			final_json = {}
+			temp_today = date.today()
+			while(str(last_date) != str(temp_today)):
+				objects = Attendance.objects.filter(date = last_date)
+				
+				for o in objects:
+					dict = {}
+					# print o.roll_number
+					dict["rollno"] = o.roll_number
+					dict["date"] = o.date.strftime("%Y-%m-%d")
+					list.append(dict)
+				last_date = last_date + relativedelta(days = 1)
+			final_json["attendance"] =  list
+			send = json.dumps(final_json, cls=DjangoJSONEncoder)
+			Access = 1
 		
-	return render(request,'webApp/attendance.html',{'json': send, 'request':request,'user':request.user})
+	return render(request,'webApp/attendance.html',{'json': send, 'request':request,'user':request.user , 'access': Access})
 	
 
 def attendance_CSV(request):

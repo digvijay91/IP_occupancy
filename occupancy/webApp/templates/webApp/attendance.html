@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="../../static/webApp/css/bootstrap.min.css" media="screen" /> 
 <link rel="stylesheet" type="text/css" href="../../static/webApp/css/dc.css" media="screen" /> 
 <link rel="stylesheet" type="test/css" href="../../static/webApp/css/main.css" media="screen"/>
+<link rel="stylesheet" type="test/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.3/css/jquery.dataTables.min.css">
   
@@ -28,6 +29,25 @@ function alertBox() {
   margin-bottom: 10px;
 }
 
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 8px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; padding-bottom: 5px;}
+.right-addon input { padding-right: 30px; }
+
 </style>
 </head>
 <body>
@@ -42,22 +62,22 @@ function alertBox() {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button> -->
-      <a class="navbar-brand" href="/template/home">NMS-occupancy</a>
+      <a class="navbar-brand" href="/template/home"> <span class="glyphicon glyphicon-home"></span> NMS-occupancy</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="/template/chart1/">Chart1</a></li>
-        <li><a href="/template/chart2/">chart2</a></li>
-        <li class = "active"><a href="/template/attendance/">TA Attendance</a></li>
+        <li><a href="/template/chart1/"><span class="glyphicon glyphicon-stats"></span> Chart1</a></li>
+        <li><a href="/template/chart2/"><span class="glyphicon glyphicon-stats"></span> Chart2</a></li>
+        <li class = "active"><a href="/template/attendance/"><span class="glyphicon glyphicon-list-alt"></span> TA Attendance</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <!-- <li>{{user.username}}</li> -->
         {% if user and not user.is_anonymous %}
-        <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
+        <li><a href="{% url 'auth:logout' %}?next={{ request.path }}"> <span class="glyphicon glyphicon-user"></span> Logout</a></li>
         {% else %}
-        <li><a href = "{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login
+        <li><a href = "{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><i class="glyphicon glyphicon-user"></i>  Login
         </a></li>
         {% endif %}
       </ul>
@@ -66,19 +86,27 @@ function alertBox() {
 </nav>
 <!-- <button type = "button" id = "CSVbutton" onClick = "/template/chart1/"> Download as CSV</button> -->
 <!-- <a href "/template/chart1">CLickMe</a> -->
-{% if user and user.username == "Ayush12029" or user.username == "Psingh" %}
+{% if access == 1 %}
+
 
 <form id = "CSVbutton" action = "/template/attendance_CSV">
-  <input type  = "submit" value = "Download as CSV">
+  <div class="inner-addon left-addon">
+    <input type  = "submit" value = "CSV File">
+    <i class="glyphicon glyphicon-download-alt"></i>
+    
+  </div>
 </form>
 
 	<div id = "table-container" class ="display">
 		<table id="table_id" class="display">
   {% elif user.username != "" %}
-    <p class = "lead">You are not yet authorized to view this data yet</p>
+  <div class="alert alert-danger" role="alert">
+    <p class = "lead">Not authorized to view the data.</p>
+  </div>
   {% else %}
+  <div class="alert alert-success" role="alert">
     <p class = "lead">Login to view the data</p>
-
+  </div>
 {% endif %}
 		</table>
 	</div>
