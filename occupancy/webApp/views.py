@@ -45,10 +45,11 @@ def attendance(request):
 	# api_to_json = json.loads(api_data)
 	send = ""
 	Access = 0
-	print request.user
-	if request.user.is_authenticated():
+	if str(request.user.username) != "":
+		print request.user.email
 		if request.user.email == "Ayush12029@iiitd.ac.in" or request.user.email == "psingh@iiitd.ac.in" or request.user.email == "digvijay09020@iiitd.ac.in":
 			print request.user.email
+			print "entered"
 			list = []
 			final_json = {}
 			temp_today = date.today()
@@ -65,7 +66,7 @@ def attendance(request):
 			final_json["attendance"] =  list
 			send = json.dumps(final_json, cls=DjangoJSONEncoder)
 			Access = 1
-		
+	print "didn't enter"	
 	return render(request,'webApp/attendance.html',{'json': send, 'request':request,'user':request.user , 'access': Access})
 	
 
