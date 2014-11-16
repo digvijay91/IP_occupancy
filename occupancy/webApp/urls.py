@@ -13,6 +13,9 @@ urlpatterns = patterns('',
     url(r'^past_same_day/(?P<time>.+)$',views.past_same_day, name = "past_same_day"),
     url(r'^month_average/(?P<time>.+)$',views.month_average, name = "month_average"),
     url(r'^attendance_CSV/',views.attendance_CSV, name = "attendance_CSV"),
+    url(r'^admin/',views.admin_view, name = "admin"),
+    url(r'^admin_insert/(?P<ta>.+)/(?P<mac>.+)$',views.admin_insert, name = "admin"),
+    url(r'^admin_delete/(?P<ta>.+)$',views.admin_delete, name = "admin"),
     
 )
 

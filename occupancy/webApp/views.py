@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from webApp.models import *
 from time import strftime
@@ -276,3 +277,44 @@ def month_average(request, time):
 # 		print i
 # 	print "done"
 # 	return HttpResponse("done")
+
+def admin_view(request):
+	send = ""
+	Access = 0
+	if str(request.user.username) != "":
+		print request.user.email
+		if request.user.email == "Ayush12029@iiitd.ac.in" or request.user.email == "psingh@iiitd.ac.in" or request.user.email == "digvijay09020@iiitd.ac.in":
+			print request.user.email
+			objects = Admin.objects.all();
+			final_json = {}
+			list = []
+			for o in objects:
+				if (o.deleted == 0):
+					dict = {}
+					dict["TA"] = o.TA;
+					dict["mac"] = o.mac;
+					list.append(dict);
+			final_json["TA"] =  list
+			send = json.dumps(final_json, cls=DjangoJSONEncoder)
+			Access = 1
+
+	return render(request,'webApp/admin.html',{'request':request,'user':request.user, 'json':send, 'access':Access})
+
+def admin_insert(request, ta, mac):
+	test = Admin.objects.filter(TA = ta)
+
+	if not test:
+		TA_object = Admin(TA = ta, mac = mac, deleted = 0)
+		TA_object.save()
+	else:
+		test.delete()
+		TA_object = Admin(TA = ta, mac = mac, deleted = 0)
+		TA_object.save()
+
+	return HttpResponseRedirect('/template/admin/')
+	# return HttpResponse("ayush")
+
+def admin_delete(request, ta):
+	del_object = Admin.objects.filter(TA = ta)
+	del_object.update(deleted = 1)
+	return HttpResponseRedirect('/template/admin/')
