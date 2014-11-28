@@ -1,0 +1,130 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF8"> 
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/bootstrap.min.css" media="screen" /> 
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/dc.css" media="screen" /> 
+<link rel="stylesheet" type="test/css" href="../../../static/webApp/css/main.css" media="screen"/>
+<link rel="stylesheet" type="test/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.3/css/jquery.dataTables.min.css">
+  
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js" type="text/javascript"></script>
+  
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" src="../../../static/webApp/js/bootstrap.js"></script>
+<script type="text/javascript" src="../../../static/webApp/js/admin.js"></script>
+
+</head>
+<body>
+  {% if access == 1 %}
+	<input type = "hidden" id = "json" value = "{{json}}">
+	<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button> -->
+      <a class="navbar-brand" href="/template/home"> <span class="glyphicon glyphicon-home"></span> NMS-occupancy</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    	<ul class="nav navbar-nav">
+          <li ><a href="/template/admin/"><span class="glyphicon glyphicon-list-alt"></span> TA Attendance</a></li>
+          <li class = "active"><a href="/template/attendance/"><span class="glyphicon glyphicon-list-alt"></span> Manage Students</a> </li>
+	    <!-- li class="dropdown">
+          <a href = "" class="dropdown-toggle" data-toggle="dropdown" role="button" id = "TAdropdown" aria-expanded="false">Insert TA<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <form class="navbar-form navbar-left" >
+      			  <div class="form-group" id = "TAform">
+			          <input type="text" class="form-control" placeholder = "Roll Number">
+      			    <input type="text" class="form-control" placeholder = "M.A.C address">
+      			  </div>
+			        <button type="button" class="btn btn-default" onClick = "addMAC()" >+</button>
+      			  <button type="button" class="btn btn-default" onClick = "removeMAC()" >-</button>
+      			  <button type="button" class="btn btn-default" onClick = "submitForm()">Submit</button>
+      			</form>
+        </ul>
+      </li -->
+     	<!-- <li class = "navbar-brand">Admin Page</li> -->
+     	</ul>
+      <ul class="nav navbar-nav navbar-right">
+	      <!-- <li>{{user.username}}</li> -->
+	        {% if user and not user.is_anonymous %}
+	        <li><a href="{% url 'auth:logout' %}?next={{ request.path }}"> <span class="glyphicon glyphicon-user"></span> Logout</a></li>
+	        {% else %}
+	        <li><a href = "{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><i class="glyphicon glyphicon-user"></i>  Login
+	        </a></li>
+	        {% endif %}
+	      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<!-- <table>
+    <tr>
+        <td onclick="function()">AAA</td>
+        <td onclick="function()">BBB</td>
+        <td onclick="function()">CCC</td>
+    </tr>
+        <tr>
+        <td onclick="function()">DDD</td>
+        <td onclick="function()">EEE</td>
+        <td onclick="function()">FFF</td>
+    </tr>
+</table> -->
+<div id = "table-container" class ="display" style = "padding-left:5px">
+		<table id="table_id" class="display">
+		</table>
+</div>
+
+{% else %}
+<input type = "hidden" id = "json" value = "{{json}}">
+  <nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button> -->
+      <a class="navbar-brand" href="/template/home"> <span class="glyphicon glyphicon-home"></span> NMS-occupancy</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+          <!-- <li>{{user.username}}</li> -->
+          {% if user and not user.is_anonymous %}
+          <li><a href="{% url 'auth:logout' %}?next={{ request.path }}"> <span class="glyphicon glyphicon-user"></span> Logout</a></li>
+          {% else %}
+          <li><a href = "{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><i class="glyphicon glyphicon-user"></i>  Login
+          </a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+      {% if user and not user.is_anonymous %}
+        <div class="alert alert-success" role="alert">
+          <p class = "lead">Not authorized to view the data.</p>
+          
+        </div>
+        {%else%}
+        <div class="alert alert-success" role="alert">
+        <p class = "lead">Login to access Admin Page</p>
+        </div>
+        {%endif%}
+{% endif %}
+
+
+
+

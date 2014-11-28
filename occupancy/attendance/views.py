@@ -9,14 +9,14 @@ import StringIO
 
 def index(request):
   dates = []
-  if request.user and not request.user.is_anonymous :
+  if request.user and request.user.is_authenticated() :
     ### Code to read token from file ###
     module_dir = os.path.dirname(__file__) # get current directory
     file_dir = os.path.join(module_dir,'token')
     handle = open(file_dir,'r')
     auth_token = handle.readline()
     ### END - Code to read token - END ###
-    api_data_url = "https://192.168.1.40:9119/attendance?email="+ request.user.email + "&from=2014-10-01&to=2014-10-31&format=yyyy-mm-dd&token="+auth_token
+    api_data_url = "https://192.168.1.40:9119/attendance?email="+ str(request.user.email) + "&from=2014-11-01&to=2014-11-31&format=yyyy-mm-dd&token="+ auth_token
     c = pycurl.Curl()
     c.setopt(pycurl.URL, api_data_url)
     c.setopt(pycurl.SSL_VERIFYPEER, 0)

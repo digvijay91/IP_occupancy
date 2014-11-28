@@ -1,14 +1,18 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
+from webApp.models import *
 from time import strftime
 from datetime import *
 from dateutil.relativedelta import relativedelta
 from django.http import HttpResponse
-from django.utils import simplejson
+# from django.utils import simplejson
+from django.core.serializers.json import DjangoJSONEncoder
 import pycurl
-import json
+import json 
 import StringIO
 import os, csv
+import datetime
 
 # Create your views here.
 
@@ -19,28 +23,76 @@ def chart1(request):
 def chart2(request):
 	return render(request, 'webApp/chart2.html')
 
-def attendance(request):
+def last_day_of_month(any_day):
+  next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
+  return next_month - datetime.timedelta(days=next_month.day)
+
+def admin_attendance(request):
+  Access = 0
+  api_data = {}
+  if request.user and request.user.is_authenticated() :
+    if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+      ### Code to read token from file ###
+      module_dir = os.path.dirname(__file__) # get current directory
+      file_dir = os.path.join(module_dir,'token')
+      handle = open(file_dir,'r')
+      auth_token = handle.readline()
+      ### END - Code to read token - END ###
+      today = date.today()
+      first_day = str(today.year)+"-"+str(today.month)+"-01"
+      last_day = str(today.year)+"-"+str(today.month)+"-"+str(last_day_of_month(today).day)
+      api_data_url = "https://192.168.1.40:9199/attendance/get?from="+first_day+"&to="+last_day+"&format=yyyy-mm-dd&token="+ auth_token
+      c = pycurl.Curl()
+      c.setopt(pycurl.URL, api_data_url)
+      c.setopt(pycurl.SSL_VERIFYPEER, 0)
+      c.setopt(pycurl.SSL_VERIFYHOST, 0)
+      b = StringIO.StringIO()
+      c.setopt(pycurl.WRITEFUNCTION, b.write)
+      c.setopt(pycurl.FOLLOWLOCATION, 1)
+      c.setopt(pycurl.MAXREDIRS, 5)
+      c.perform()
+      api_data = b.getvalue()
+      print api_data
+      Access=1
+  template = loader.get_template('webApp/attendance.html');
+  context = RequestContext(request,{'request':request, 'user': request.user, 'json':api_data,'access':Access})
+  return HttpResponse(template.render(context))
+
+def attendance_CSV(request):
 	today = date.today()
-	last_date = today - relativedelta(days=31)
-	print str(today)
-	module_dir = os.path.dirname(__file__) # get current directory
-	file_dir = os.path.join(module_dir,'token')
-	handle = open(file_dir,'r')
-	auth_token = handle.readline()
-	api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(last_date) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
-	c = pycurl.Curl()
-	c.setopt(pycurl.URL, api_data_url)
-	c.setopt(pycurl.SSL_VERIFYPEER, 0)
-	c.setopt(pycurl.SSL_VERIFYHOST, 0)
-	b = StringIO.StringIO()
-	c.setopt(pycurl.WRITEFUNCTION, b.write)
-	c.setopt(pycurl.FOLLOWLOCATION, 1)
-	c.setopt(pycurl.MAXREDIRS, 5)
-	c.perform()
-	api_data = b.getvalue()
-	api_to_json = json.loads(api_data)
-	return render(request,'webApp/attendance.html',{'json': api_data	})
-	
+	today = today -  relativedelta(days = 1)
+	last_date = today - relativedelta(days = today.day - 1)
+	temp_today = date.today()
+	key_dates = []
+	list_of_dicts = []
+	size = 0
+	while(str(last_date)!= str(temp_today)):
+		objects = Attendance.objects.filter(date = last_date)
+		if (len(objects) > size):
+			size = len(objects)
+		last_date = last_date + relativedelta(days = 1)
+	last_date = today - relativedelta(days = today.day - 1)
+
+	for i in range(size):
+		dict = {}
+		list_of_dicts.append(dict)
+	# print list_of_dicts
+	while(str(last_date)!= str(temp_today)):
+		key_dates.append(last_date)
+		objects = Attendance.objects.filter(date = last_date)
+		i = 0
+		for o in objects:
+			print list_of_dicts[i]
+			list_of_dicts[i][last_date] = o.roll_number
+			i = i + 1
+		last_date = last_date + relativedelta(days = 1)
+	response = HttpResponse(content_type = "text/csv")
+	response['Content-Disposition'] = 'attachment; filename="TA_Attendance.csv"'
+	dict_writer = csv.DictWriter(response, key_dates)
+	dict_writer.writer.writerow(key_dates)
+	dict_writer.writerows(list_of_dicts)
+	return response
+
 
 
 def past_week_data(request,time):
@@ -212,3 +264,50 @@ def month_average(request, time):
 # 		print i
 # 	print "done"
 # 	return HttpResponse("done")
+
+def admin_students(request):
+  api_data={}
+  Access = 0
+  if request.user and request.user.is_authenticated() :
+    if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+      ### Code to read token from file ###
+      module_dir = os.path.dirname(__file__) # get current directory
+      file_dir = os.path.join(module_dir,'token')
+      handle = open(file_dir,'r')
+      auth_token = handle.readline()
+      ### END - Code to read token - END ###
+      api_data_url = "https://192.168.1.40:9199/ta/get?token="+ auth_token
+      c = pycurl.Curl()
+      c.setopt(pycurl.URL, api_data_url)
+      c.setopt(pycurl.SSL_VERIFYPEER, 0)
+      c.setopt(pycurl.SSL_VERIFYHOST, 0)
+      b = StringIO.StringIO()
+      c.setopt(pycurl.WRITEFUNCTION, b.write)
+      c.setopt(pycurl.FOLLOWLOCATION, 1)
+      c.setopt(pycurl.MAXREDIRS, 5)
+      c.perform()
+      api_data = b.getvalue()
+      print api_data
+      Access = 1
+  template = loader.get_template('webApp/admin_students.html');
+  context = RequestContext(request,{'request':request, 'user': request.user, 'json':api_data,'access':Access})
+  return HttpResponse(template.render(context))
+
+def admin_insert(request, ta, mac):
+	test = Admin.objects.filter(TA = ta)
+
+	if not test:
+		TA_object = Admin(TA = ta, mac = mac, deleted = 0)
+		TA_object.save()
+	else:
+		test.delete()
+		TA_object = Admin(TA = ta, mac = mac, deleted = 0)
+		TA_object.save()
+
+	return HttpResponseRedirect('/template/admin/')
+	# return HttpResponse("ayush")
+
+def admin_delete(request, ta):
+	del_object = Admin.objects.filter(TA = ta)
+	del_object.update(deleted = 1)
+	return HttpResponseRedirect('/template/admin/')
