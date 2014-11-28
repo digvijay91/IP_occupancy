@@ -12,6 +12,7 @@ import pycurl
 import json 
 import StringIO
 import os, csv
+import datetime
 
 # Create your views here.
 
@@ -22,54 +23,40 @@ def chart1(request):
 def chart2(request):
 	return render(request, 'webApp/chart2.html')
 
-def attendance(request):
-	today = date.today()
-	today = today -  relativedelta(days = 1)
-	last_date = today - relativedelta(days = today.day - 1)
-	# # print str(today)
-	# module_dir = os.path.dirname(__file__) # get current directory
-	# file_dir = os.path.join(module_dir,'token')
-	# handle = open(file_dir,'r')
-	# auth_token = handle.readline()
-	# api_data_url = "https://192.168.1.40:9119/attendance?from=" + str(last_date) + "&to=" + str(today) + "&format=yyyy-mm-dd-hh24:mi:ss&token=" + auth_token
-	# print api_data_url
-	# c = pycurl.Curl()
-	# c.setopt(pycurl.URL, api_data_url)
-	# c.setopt(pycurl.SSL_VERIFYPEER, 0)
-	# c.setopt(pycurl.SSL_VERIFYHOST, 0)
-	# b = StringIO.StringIO()
-	# c.setopt(pycurl.WRITEFUNCTION, b.write)
-	# c.setopt(pycurl.FOLLOWLOCATION, 1)
-	# c.setopt(pycurl.MAXREDIRS, 5)
-	# c.perform()
-	# api_data = b.getvalue()
-	# api_to_json = json.loads(api_data)
-	send = ""
-	Access = 0
-	if str(request.user.username) != "":
-		print request.user.email
-		if request.user.email == "Ayush12029@iiitd.ac.in" or request.user.email == "psingh@iiitd.ac.in" or request.user.email == "digvijay09020@iiitd.ac.in":
-			print request.user.email
-			print "entered"
-			list = []
-			final_json = {}
-			temp_today = date.today()
-			while(str(last_date) != str(temp_today)):
-				objects = Attendance.objects.filter(date = last_date)
-				
-				for o in objects:
-					dict = {}
-					# print o.roll_number
-					dict["rollno"] = o.roll_number
-					dict["date"] = o.date.strftime("%Y-%m-%d")
-					list.append(dict)
-				last_date = last_date + relativedelta(days = 1)
-			final_json["attendance"] =  list
-			send = json.dumps(final_json, cls=DjangoJSONEncoder)
-			Access = 1
-	print "didn't enter"	
-	return render(request,'webApp/attendance.html',{'json': send, 'request':request,'user':request.user , 'access': Access})
-	
+def last_day_of_month(any_day):
+  next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
+  return next_month - datetime.timedelta(days=next_month.day)
+
+def admin_attendance(request):
+  Access = 0
+  api_data = {}
+  if request.user and request.user.is_authenticated() :
+    if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+      ### Code to read token from file ###
+      module_dir = os.path.dirname(__file__) # get current directory
+      file_dir = os.path.join(module_dir,'token')
+      handle = open(file_dir,'r')
+      auth_token = handle.readline()
+      ### END - Code to read token - END ###
+      today = date.today()
+      first_day = str(today.year)+"-"+str(today.month)+"-01"
+      last_day = str(today.year)+"-"+str(today.month)+"-"+str(last_day_of_month(today).day)
+      api_data_url = "https://192.168.1.40:9199/attendance/get?from="+first_day+"&to="+last_day+"&format=yyyy-mm-dd&token="+ auth_token
+      c = pycurl.Curl()
+      c.setopt(pycurl.URL, api_data_url)
+      c.setopt(pycurl.SSL_VERIFYPEER, 0)
+      c.setopt(pycurl.SSL_VERIFYHOST, 0)
+      b = StringIO.StringIO()
+      c.setopt(pycurl.WRITEFUNCTION, b.write)
+      c.setopt(pycurl.FOLLOWLOCATION, 1)
+      c.setopt(pycurl.MAXREDIRS, 5)
+      c.perform()
+      api_data = b.getvalue()
+      print api_data
+      Access=1
+  template = loader.get_template('webApp/attendance.html');
+  context = RequestContext(request,{'request':request, 'user': request.user, 'json':api_data,'access':Access})
+  return HttpResponse(template.render(context))
 
 def attendance_CSV(request):
 	today = date.today()
@@ -278,27 +265,33 @@ def month_average(request, time):
 # 	print "done"
 # 	return HttpResponse("done")
 
-def admin_view(request):
-	send = ""
-	Access = 0
-	if str(request.user.username) != "":
-		print request.user.email
-		if request.user.email == "Ayush12029@iiitd.ac.in" or request.user.email == "psingh@iiitd.ac.in" or request.user.email == "digvijay09020@iiitd.ac.in":
-			print request.user.email
-			objects = Admin.objects.all();
-			final_json = {}
-			list = []
-			for o in objects:
-				if (o.deleted == 0):
-					dict = {}
-					dict["TA"] = o.TA;
-					dict["mac"] = o.mac;
-					list.append(dict);
-			final_json["TA"] =  list
-			send = json.dumps(final_json, cls=DjangoJSONEncoder)
-			Access = 1
-
-	return render(request,'webApp/admin.html',{'request':request,'user':request.user, 'json':send, 'access':Access})
+def admin_students(request):
+  api_data={}
+  Access = 0
+  if request.user and request.user.is_authenticated() :
+    if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+      ### Code to read token from file ###
+      module_dir = os.path.dirname(__file__) # get current directory
+      file_dir = os.path.join(module_dir,'token')
+      handle = open(file_dir,'r')
+      auth_token = handle.readline()
+      ### END - Code to read token - END ###
+      api_data_url = "https://192.168.1.40:9199/ta/get?token="+ auth_token
+      c = pycurl.Curl()
+      c.setopt(pycurl.URL, api_data_url)
+      c.setopt(pycurl.SSL_VERIFYPEER, 0)
+      c.setopt(pycurl.SSL_VERIFYHOST, 0)
+      b = StringIO.StringIO()
+      c.setopt(pycurl.WRITEFUNCTION, b.write)
+      c.setopt(pycurl.FOLLOWLOCATION, 1)
+      c.setopt(pycurl.MAXREDIRS, 5)
+      c.perform()
+      api_data = b.getvalue()
+      print api_data
+      Access = 1
+  template = loader.get_template('webApp/admin_students.html');
+  context = RequestContext(request,{'request':request, 'user': request.user, 'json':api_data,'access':Access})
+  return HttpResponse(template.render(context))
 
 def admin_insert(request, ta, mac):
 	test = Admin.objects.filter(TA = ta)

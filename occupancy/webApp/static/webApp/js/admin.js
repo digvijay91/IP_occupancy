@@ -1,9 +1,7 @@
 var json_data;
 $(document).ready( function () {
-
 	var temp = document.getElementById("json").value;
 	json_data = JSON.parse(temp);
-	console.log(json_data);
 	createTable();
     $('#table_id').DataTable({
     	// ordering: false
@@ -14,25 +12,36 @@ $(document).ready( function () {
     
 } );
 
+function toTitleCase(str)
+{
+  return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
 
 function createTable(){
 	var table = document.getElementById("table_id");
 	var header = table.createTHead();
 	var row1 = header.insertRow(0);
-	row1.insertCell(0).innerHTML = "List of TAs";
-	row1.insertCell(1).innerHTML = "M.A.C addresses";
-	row1.insertCell(2).innerHTML = "Modify";
-	row1.insertCell(3).innerHTML = "Delete";
+	row1.insertCell(0).innerHTML = "Roll Number";
+  row1.insertCell(1).innerHTML = "Name";
+	row1.insertCell(2).innerHTML = "Batch";
+	row1.insertCell(3).innerHTML = "MAC addresses";
+  row1.insertCell(4).innerHTML = "Email";
+	row1.insertCell(5).innerHTML = "Modify";
+	row1.insertCell(6).innerHTML = "Delete";
 	var body = table.appendChild(document.createElement('tbody'));
 	var mod = document.createElement("input");
 	mod.type = "submit";
 	mod.value = "modify";
-	for(i=0;i<json_data.TA.length;i++){
+	for(i=0;i<json_data.TAs.length;i++){
 		var row = body.insertRow(i);
-		row.insertCell(0).innerHTML = json_data.TA[i].TA;
-		row.insertCell(1).innerHTML = json_data.TA[i].mac;
-		row.insertCell(2).innerHTML = '<button type = "submit" id =' + i +', class="btn btn-default" onClick = "modifyForm(event, this.id)">modify</button>';
-		row.insertCell(3).innerHTML = '<button type = "submit" id =' + i +', class="btn btn-default" onClick = "deleteTA(this.id)">delete</button>';
+    var ta = json_data.TAs[i];
+		row.insertCell(0).innerHTML = ta.rollno.toUpperCase();
+		row.insertCell(1).innerHTML = toTitleCase(ta.name);
+    row.insertCell(2).innerHTML = toTitleCase(ta.batch);
+    row.insertCell(3).innerHTML = ta.macs;
+    row.insertCell(4).innerHTML = ta.email;
+		row.insertCell(5).innerHTML = '<button type = "submit" id =' + i +', class="btn btn-default" onClick = "modifyForm(event, this.id)">modify</button>';
+		row.insertCell(6).innerHTML = '<button type = "submit" id =' + i +', class="btn btn-default" onClick = "deleteTA(this.id)">delete</button>';
 
 	}
 }

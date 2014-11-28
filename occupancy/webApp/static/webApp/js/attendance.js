@@ -114,7 +114,9 @@ function create_2d(){
 	}
 	for(i=0;i<json_data.attendance.length;i++){
 		var index = uniquerollno.indexOf(json_data.attendance[i].rollno);
-		attendance[index].push(json_data.attendance[i].date);
+    for(j=0;j<json_data.attendance[i].present_dates.length;j++){
+      attendance[index].push(json_data.attendance[i].present_dates[j]);
+    }
 	}
 	// console.log(attendance);
 }
