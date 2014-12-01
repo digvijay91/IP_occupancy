@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="../../../static/webApp/css/bootstrap.min.css" media="screen" /> 
 <link rel="stylesheet" type="text/css" href="../../../static/webApp/css/dc.css" media="screen" /> 
-<link rel="stylesheet" type="test/css" href="../../../static/webApp/css/main.css" media="screen"/>
-<link rel="stylesheet" type="test/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/admin.css" media="screen"/>
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.3/css/jquery.dataTables.min.css">
   
@@ -52,7 +52,7 @@ function alertBox() {
 </head>
 <body>
 	<input type = "hidden" id = "json" value = "{{json}}">
-	<nav class="navbar navbar-default" role="navigation">
+	<nav class="navbar navbar-custom" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -62,13 +62,13 @@ function alertBox() {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button> -->
-      <a class="navbar-brand" href="/template/attendance"> <span class="glyphicon glyphicon-home"></span> NMS-occupancy</a>
+      <a class="navbar-brand" href="/template/admin"> <span class="glyphicon glyphicon-home"></span> NMS-occupancy</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class = "active"><a href="/template/attendance/"><span class="glyphicon glyphicon-list-alt"></span> TA Attendance</a></li>
+        <li class = "active"><a href="/template/admin/"><span class="glyphicon glyphicon-list-alt"></span> TA Attendance</a></li>
         <li ><a href="/template/admin/students/"><span class="glyphicon glyphicon-list-alt"></span> Manage Students</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -88,16 +88,28 @@ function alertBox() {
 {% if access == 1 %}
 
 
-<form id = "CSVbutton" action = "/template/attendance_CSV">
+<!--form id = "CSVbutton" action = "/template/attendance_CSV">
   <div class="inner-addon left-addon">
     <input type  = "submit" value = "CSV File">
     <i class="glyphicon glyphicon-download-alt"></i>
     
   </div>
-</form>
-
-	<div id = "table-container" class ="display">
-		<table id="table_id" class="display">
+</form-->
+<div id="my-content" >
+  <div id="header">
+    <div id="title">
+    TA Attendance
+    </div>
+  </div>
+  <div id="my-body">
+    <div id="toolbar">
+      <div class="toolbar-element">Download TA Attendance</div>
+      <div class="toolbar-element">Recompute Attendance</div>
+      <div class="toolbar-element">Modify Attendance</div>
+      <div class="toolbar-element">Change Timings</div>
+    </div>
+  	<div id = "table-container" class ="display">
+	  	<table id="table_id" class="display">
   {% elif user.username != "" %}
   <div class="alert alert-danger" role="alert">
     <p class = "lead">Not authorized to view the data.</p>
@@ -107,8 +119,10 @@ function alertBox() {
     <p class = "lead">Login to view the data</p>
   </div>
 {% endif %}
-		</table>
-	</div>
+  		</table>
+  	</div>
+  </div>
+</div>
 
 </body>
 </html>

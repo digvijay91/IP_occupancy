@@ -1,0 +1,59 @@
+
+#my-content{
+/*  background-color:orange;*/
+  height:100%;
+  width:100%;
+}
+#my-body{
+  width:100%;
+  height:50%;
+  min-width:500px;
+  max-height:300px;
+}
+#header{
+  height:10%;
+  width:80%;
+  min-width:400px;
+  min-height:80px;
+  margin-left:20px;
+}
+#title{
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size:50px;
+  border-bottom:2px solid grey;
+}
+#toolbar{
+  width:100%;
+  min-width:400px;
+  height:50px;
+}
+.toolbar-element{
+  display:inline-block;
+  height:50px;
+  width:200px;
+  line-height:50px;
+  font-weight:bold;
+  margin-left:20px;
+  text-align:center;
+}
+.toolbar-element:hover{
+  color: #cc3333;
+  cursor: pointer;
+}
+.navbar-custom {
+  color:#cc3333;
+  background-color:white;
+  border-bottom:1px solid #E7E7E7;
+}
+.navbar-inverse .navbar-inner {
+  border-bottom:1px solid black;
+}
+.navbar-custom .navbar-nav > li > a {
+    color:#cc3333;
+}
+.navbar-custom .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #cc3333;
+}
+.navbar-custom .navbar-brand {
+    color:#111;
+}

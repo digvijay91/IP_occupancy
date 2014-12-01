@@ -1,16 +1,36 @@
 var json_data;
+var otable;
 $(document).ready( function () {
 	var temp = document.getElementById("json").value;
 	json_data = JSON.parse(temp);
 	createTable();
-    $('#table_id').DataTable({
+  otable =  $('#table_id').DataTable({
+      "iDisplayLength":-1,
+      "bLengthChange":false,
+      "scrollY":calcDataTableHeight(),
+      "scrollX":true,
+      "bPaginate":false
     	// ordering: false
     });
  	// $('td').click( function() {
   //   console.log("clicked");
-  // } );   
-    
+  // } );
+  setupToolbar();
 } );
+var calcDataTableHeight = function() {
+  return $(window).height()*40/100;
+};
+$(window).resize(function () {
+  var oSettings = oTable.fnSettings();
+  oSettings.oScroll.sY = calcDataTableHeight(); 
+  oTable.fnDraw();
+});  
+function setupToolbar(){
+  $('#table_id_filter').css('float','left');
+  $('#table-container').css('margin-top','5px');
+  $('#table-container').css('padding-top','5px');
+  $('#table-container').css('padding-left','5px');
+};
 
 function toTitleCase(str)
 {

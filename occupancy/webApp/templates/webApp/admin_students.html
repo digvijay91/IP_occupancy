@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/bootstrap.min.css" media="screen" /> 
-<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/dc.css" media="screen" /> 
-<link rel="stylesheet" type="test/css" href="../../../static/webApp/css/main.css" media="screen"/>
-<link rel="stylesheet" type="test/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/bootstrap.min.css" media="screen" > 
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/dc.css" media="screen" > 
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/admin.css" media="screen">
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.3/css/jquery.dataTables.min.css">
   
@@ -24,7 +24,7 @@
 <body>
   {% if access == 1 %}
 	<input type = "hidden" id = "json" value = "{{json}}">
-	<nav class="navbar navbar-default" role="navigation">
+	<nav class="navbar navbar-custom" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -34,29 +34,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button> -->
-      <a class="navbar-brand" href="/template/home"> <span class="glyphicon glyphicon-home"></span> NMS-occupancy</a>
+      <a class="navbar-brand" href="/template/admin"> <span class="glyphicon glyphicon-home"></span> NMS-occupancy</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     	<ul class="nav navbar-nav">
           <li ><a href="/template/admin/"><span class="glyphicon glyphicon-list-alt"></span> TA Attendance</a></li>
-          <li class = "active"><a href="/template/attendance/"><span class="glyphicon glyphicon-list-alt"></span> Manage Students</a> </li>
-	    <!-- li class="dropdown">
-          <a href = "" class="dropdown-toggle" data-toggle="dropdown" role="button" id = "TAdropdown" aria-expanded="false">Insert TA<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <form class="navbar-form navbar-left" >
-      			  <div class="form-group" id = "TAform">
-			          <input type="text" class="form-control" placeholder = "Roll Number">
-      			    <input type="text" class="form-control" placeholder = "M.A.C address">
-      			  </div>
-			        <button type="button" class="btn btn-default" onClick = "addMAC()" >+</button>
-      			  <button type="button" class="btn btn-default" onClick = "removeMAC()" >-</button>
-      			  <button type="button" class="btn btn-default" onClick = "submitForm()">Submit</button>
-      			</form>
-        </ul>
-      </li -->
-     	<!-- <li class = "navbar-brand">Admin Page</li> -->
+          <li class = "active"><a href="/template/admin/students/"><span class="glyphicon glyphicon-list-alt"></span> Manage Students</a> </li>
      	</ul>
       <ul class="nav navbar-nav navbar-right">
 	      <!-- <li>{{user.username}}</li> -->
@@ -83,10 +68,24 @@
         <td onclick="function()">FFF</td>
     </tr>
 </table> -->
-<div id = "table-container" class ="display" style = "padding-left:5px">
-		<table id="table_id" class="display">
-		</table>
+<div id="my-content" >
+  <div id="header">
+    <div id="title">
+    Manage Students
+    </div>
+  </div>
+  <div id="my-body">
+    <div id="toolbar">
+      <div class="toolbar-element">+Add Teaching Assistant</div>
+      <div class="toolbar-element">Remove TAs</div>
+    </div>
+    <div id = "table-container" class ="display" >
+      <table id="table_id" class="display">
+      </table>
+    </div>
+  </div>
 </div>
+  <!--/div-->
 
 {% else %}
 <input type = "hidden" id = "json" value = "{{json}}">

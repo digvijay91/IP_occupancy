@@ -1,9 +1,20 @@
+var otable;
 $(document).ready( function () {
 	dynamictable();
-    $('#table_id').DataTable({
-    	ordering: false
+  otable =  $('#table_id').DataTable({
+      "iDisplayLength":-1,
+      "bLengthChange":false,
+      "scrollY":calcDataTableHeight(),
+      "scrollX":true,
+      "bPaginate":false
+      // ordering: false
     });
-    
+   $(window).resize(function () {
+    var oSettings = oTable.fnSettings();
+    oSettings.oScroll.sY = calcDataTableHeight();
+    oTable.fnDraw();
+  });
+  setupToolbar();
 } );
 
 var header_dates = new Array();
@@ -12,6 +23,18 @@ var attendance;
 var uniquerollno;
 var length_col;
 var numberdays;
+
+var calcDataTableHeight = function() {
+  return $(window).height()*40/100;
+};
+
+function setupToolbar(){
+  $('#table_id_filter').css('float','left');
+  $('#table-container').css('margin-top','5px');
+  $('#table-container').css('padding-top','5px');
+  $('#table-container').css('padding-left','5px');
+};
+
 
 function dynamictable(){
 	generate_header();
