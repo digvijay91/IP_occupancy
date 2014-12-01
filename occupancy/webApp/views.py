@@ -27,32 +27,40 @@ def last_day_of_month(any_day):
   next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
   return next_month - datetime.timedelta(days=next_month.day)
 
+def curl_request_addr(address,url):
+  ### Code to read token from file ###
+  module_dir = os.path.dirname(__file__) # get current directory
+  file_dir = os.path.join(module_dir,'token')
+  handle = open(file_dir,'r')
+  auth_token = handle.readline()
+  ### END - Code to read token - END ###
+  api_data_url = address+url+"&token="+auth_token
+  c = pycurl.Curl()
+  c.setopt(pycurl.URL, api_data_url)
+  c.setopt(pycurl.SSL_VERIFYPEER, 0)
+  c.setopt(pycurl.SSL_VERIFYHOST, 0)
+  b = StringIO.StringIO()
+  c.setopt(pycurl.WRITEFUNCTION, b.write)
+  c.setopt(pycurl.FOLLOWLOCATION, 1)
+  c.setopt(pycurl.MAXREDIRS, 5)
+  c.perform()
+  api_data = b.getvalue()
+  return api_data 
+
+def curl_request(url):
+  return curl_request_addr("https://192.168.1.40:9199",url)
+
+
 def admin_attendance(request):
   Access = 0
   api_data = {}
   if request.user and request.user.is_authenticated() :
     if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
-      ### Code to read token from file ###
-      module_dir = os.path.dirname(__file__) # get current directory
-      file_dir = os.path.join(module_dir,'token')
-      handle = open(file_dir,'r')
-      auth_token = handle.readline()
-      ### END - Code to read token - END ###
       today = date.today()
       first_day = str(today.year)+"-"+str(today.month)+"-01"
       last_day = str(today.year)+"-"+str(today.month)+"-"+str(last_day_of_month(today).day)
-      api_data_url = "https://192.168.1.40:9199/attendance/get?from="+first_day+"&to="+last_day+"&format=yyyy-mm-dd&token="+ auth_token
-      c = pycurl.Curl()
-      c.setopt(pycurl.URL, api_data_url)
-      c.setopt(pycurl.SSL_VERIFYPEER, 0)
-      c.setopt(pycurl.SSL_VERIFYHOST, 0)
-      b = StringIO.StringIO()
-      c.setopt(pycurl.WRITEFUNCTION, b.write)
-      c.setopt(pycurl.FOLLOWLOCATION, 1)
-      c.setopt(pycurl.MAXREDIRS, 5)
-      c.perform()
-      api_data = b.getvalue()
-      print api_data
+      stmt = "/attendance/get?from="+first_day+"&to="+last_day+"&format=yyyy-mm-dd"
+      api_data = curl_request(stmt);
       Access=1
   template = loader.get_template('webApp/attendance.html');
   context = RequestContext(request,{'request':request, 'user': request.user, 'json':api_data,'access':Access})
@@ -270,24 +278,8 @@ def admin_students(request):
   Access = 0
   if request.user and request.user.is_authenticated() :
     if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
-      ### Code to read token from file ###
-      module_dir = os.path.dirname(__file__) # get current directory
-      file_dir = os.path.join(module_dir,'token')
-      handle = open(file_dir,'r')
-      auth_token = handle.readline()
-      ### END - Code to read token - END ###
-      api_data_url = "https://192.168.1.40:9199/ta/get?token="+ auth_token
-      c = pycurl.Curl()
-      c.setopt(pycurl.URL, api_data_url)
-      c.setopt(pycurl.SSL_VERIFYPEER, 0)
-      c.setopt(pycurl.SSL_VERIFYHOST, 0)
-      b = StringIO.StringIO()
-      c.setopt(pycurl.WRITEFUNCTION, b.write)
-      c.setopt(pycurl.FOLLOWLOCATION, 1)
-      c.setopt(pycurl.MAXREDIRS, 5)
-      c.perform()
-      api_data = b.getvalue()
-      print api_data
+      api_data_url = "/ta/get?"
+      api_data = curl_request(api_data_url)
       Access = 1
   template = loader.get_template('webApp/admin_students.html');
   context = RequestContext(request,{'request':request, 'user': request.user, 'json':api_data,'access':Access})
@@ -295,7 +287,6 @@ def admin_students(request):
 
 def admin_insert(request, ta, mac):
 	test = Admin.objects.filter(TA = ta)
-
 	if not test:
 		TA_object = Admin(TA = ta, mac = mac, deleted = 0)
 		TA_object.save()

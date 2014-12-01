@@ -278,3 +278,15 @@ body{
   margin-left: 95%;
 }
 
+#my-content{
+  background-color:blue;
+  border:10px solid black;
+  height:100%;
+  width:100%;
+}
+.my-content{
+  background-color:blue;
+  border:10px solid black;
+  height:100%;
+  width:100%;
+}
