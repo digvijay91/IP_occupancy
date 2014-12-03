@@ -1,5 +1,6 @@
 var json_data;
 var otable;
+var rollnos = new Array();
 $(document).ready( function () {
 	var temp = document.getElementById("json").value;
 	json_data = JSON.parse(temp);
@@ -27,7 +28,36 @@ $(window).resize(function () {
   oTable.fnDraw();
 });  
 function setupSubMenu(){
-  var subMenuOptions=["add"];
+  setupSubMenuButtons();
+  setupSubMenuAutoComplete();
+};
+
+function setupSubMenuAutoComplete(){
+  var select = document.getElementById('add-mac-rollno');
+  var select2 = document.getElementById('del-mac-rollno');
+  select.options.length = 0;
+  select2.options.length = 0;
+  select.options.add(new Option("Select Roll Number","null"));
+  select2.options.add(new Option("Select Roll Number","null"));
+  for (var i=0;i< rollnos.length;i++){
+    var d = rollnos[i];
+    select.options.add(new Option(d,i));
+    select2.options.add(new Option(d,i));
+  }
+  select = document.getElementById('del-mac-mac');
+  select.options.length = 0;
+  select.options.add(new Option("Select Roll number","null"));
+  $('#del-mac-rollno').change(function(){
+    var index = parseInt($('#del-mac-rollno').val());
+    $('#del-mac-mac').empty();
+    for(var i=0;i<json_data.TAs[index].macs.length;i++){
+      select.options.add(new Option(json_data.TAs[index].macs[i],json_data.TAs[index].macs[i]));
+    }
+  });
+};
+
+function setupSubMenuButtons(){
+  var subMenuOptions=["add","add-mac","upload","del-mac"];
   $.each(subMenuOptions,function(i,el){
     $('#'+el+"-button").click(function(){
       $("#"+el).toggle();
@@ -68,7 +98,7 @@ function createTable(){
 	for(i=0;i<json_data.TAs.length;i++){
 		var row = body.insertRow(i);
     var ta = json_data.TAs[i];
-		row.insertCell(0).innerHTML = ta.rollno.toUpperCase();
+		row.insertCell(0).innerHTML = ta.rollno.toUpperCase();rollnos.push(ta.rollno.toUpperCase());
 		row.insertCell(1).innerHTML = toTitleCase(ta.name);
     row.insertCell(2).innerHTML = toTitleCase(ta.batch);
     row.insertCell(3).innerHTML = ta.macs;
