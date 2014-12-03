@@ -102,12 +102,8 @@ function generate_header(){
 				head_date.setDate(1);
 			}
 			else head_date.setDate(parseInt(head_date.getDate()) + 1 );
-		
-
 	}
 	// console.log(header_dates);
-	
-
 }
 
 function date_to_string(date){

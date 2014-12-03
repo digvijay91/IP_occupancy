@@ -57,3 +57,66 @@
 .navbar-custom .navbar-brand {
     color:#111;
 }
+
+#download{
+
+}
+
+.sub-menu-window{
+  width:554px;
+  min-width:554px;
+  height:354px;
+  min-height:354px;
+  display:none;
+  position:fixed;
+  left:50%;
+  top:50%;
+  -webkit-transform:translate(-50%,-50%); 
+  -moz-transform:translate(-50%,-50%);
+  background-color:#e6e6e6;
+  z-index:100;
+}
+.sub-menu-container{
+  height:350px;
+  min-height:350px;
+  width:550px;
+  min-width:550px;
+  margin:0 auto;
+  margin-top:2px;
+  padding:50px 50px 50px 50px;
+  background-color:white;
+}
+.options{
+  float:left;
+  display:inline-block;
+  height:50px;
+  min-height:50px;
+  width:50%;
+  text-align:justify;
+  line-height:50px;
+  font-size:16px;
+}
+.form-elements{
+  height:50px;
+  width:50%;
+  display:inline-block;
+  vertical-align:center;
+  line-height:50px;
+}
+.sub-menu-title{
+  height:40px;
+  width:100%;
+  font-size:25px;
+  vertical-align:middle;
+  text-align:center;
+  color:#cc3333;
+  margin-bottom:30px;
+  border-bottom:0.04em solid #DDDDDD; 
+}
+.valign-this-block{
+  margin-top:5px;
+}
+.sub-menu-button{
+  margin-top:20px;
+  width:100%;
+}
