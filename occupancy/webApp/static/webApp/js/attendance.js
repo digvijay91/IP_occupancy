@@ -6,7 +6,8 @@ $(document).ready( function () {
       "bLengthChange":false,
       "scrollY":calcDataTableHeight(),
       "scrollX":true,
-      "bPaginate":false
+      "bPaginate":false,
+      "bAutoWidth":false
       // ordering: false
     });
    $(window).resize(function () {
@@ -15,6 +16,10 @@ $(document).ready( function () {
     oTable.fnDraw();
   });
   setupToolbar();
+  setupSubMenu();
+/*  $('#download-button').click(function(){
+    $('#download').toggle();
+  });*/
 } );
 
 var header_dates = new Array();
@@ -28,6 +33,17 @@ var calcDataTableHeight = function() {
   return $(window).height()*40/100;
 };
 
+function setupSubMenu(){
+  var subMenuOptions=["download","modify"];
+  $.each(subMenuOptions,function(i,el){
+    $('#'+el+"-button").click(function(){
+      $("#"+el).toggle();
+    });
+    $('#'+el+"-cancel").click(function(){
+      $("#"+el).toggle();
+    });
+  });
+};
 function setupToolbar(){
   $('#table_id_filter').css('float','left');
   $('#table-container').css('margin-top','5px');

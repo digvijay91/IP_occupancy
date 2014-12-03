@@ -16,6 +16,7 @@ $(document).ready( function () {
   //   console.log("clicked");
   // } );
   setupToolbar();
+  setupSubMenu();
 } );
 var calcDataTableHeight = function() {
   return $(window).height()*40/100;
@@ -25,6 +26,18 @@ $(window).resize(function () {
   oSettings.oScroll.sY = calcDataTableHeight(); 
   oTable.fnDraw();
 });  
+function setupSubMenu(){
+  var subMenuOptions=["add"];
+  $.each(subMenuOptions,function(i,el){
+    $('#'+el+"-button").click(function(){
+      $("#"+el).toggle();
+    });
+    $('#'+el+"-cancel").click(function(){
+      $("#"+el).toggle();
+    });
+  });
+};
+
 function setupToolbar(){
   $('#table_id_filter').css('float','left');
   $('#table-container').css('margin-top','5px');
