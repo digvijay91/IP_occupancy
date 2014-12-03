@@ -6,16 +6,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="../../../static/webApp/css/bootstrap.min.css" media="screen" /> 
 <link rel="stylesheet" type="text/css" href="../../../static/webApp/css/dc.css" media="screen" /> 
-<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="../../../static/webApp/css/admin.css" media="screen"/>
 <!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.3/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="../../../static/webApp/css/jquery.dataTables.min.css">
   
 <!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script> 
+<script src="../../../static/webApp/js/jquery.js" type="text/javascript"></script>
+<script src="../../../static/webApp/js/bootstrap.min.js"></script> 
 <!-- DataTables -->
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../../static/webApp/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../../static/webApp/js/attendance.js"></script>
 <script>
 function alertBox() {
@@ -83,18 +83,7 @@ function alertBox() {
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<!-- <button type = "button" id = "CSVbutton" onClick = "/template/chart1/"> Download as CSV</button> -->
-<!-- <a href "/template/chart1">CLickMe</a> -->
 {% if access == 1 %}
-
-
-<!--form id = "CSVbutton" action = "/template/attendance_CSV">
-  <div class="inner-addon left-addon">
-    <input type  = "submit" value = "CSV File">
-    <i class="glyphicon glyphicon-download-alt"></i>
-    
-  </div>
-</form-->
 <!-- Add DIVS for each button in the menu -->
 <div id="download" class="sub-menu-window">
   <div class="sub-menu-container">
@@ -132,7 +121,7 @@ function alertBox() {
       </div>
       <div class="sub-menu-options">Date:</div>
       <div class="form-elements">
-      <input type="text" class="form-control valign-this-block" id="date" placeholder="In format:yyyy-mm-dd">
+      <input type="text" class="form-control valign-this-block" id="date" placeholder="In format: yyyy-mm-dd">
       </div>
       <div class="sub-menu-options">Set:</div>
       <div class="form-elements valign-this-block">
@@ -165,8 +154,8 @@ function alertBox() {
       <!--div class="toolbar-element">Show Attendance</div-->
       <div id="download-button" class="toolbar-element">Download Attendance</div>
       <div id="modify-button" class="toolbar-element">Modify Attendance</div>
-      <div class="toolbar-element">Change Timings</div>
-      <div class="toolbar-element">Recalculate Attendance</div>
+      <!--div class="toolbar-element">Change Timings</div>
+      <div class="toolbar-element">Recalculate Attendance</div-->
     </div>
   	<div id = "table-container" class ="display">
 	  	<table id="table_id" class="display">
