@@ -12,7 +12,6 @@ import pycurl
 import json 
 import StringIO
 import os, csv
-import datetime
 
 # Create your views here.
 
@@ -24,8 +23,8 @@ def chart2(request):
 	return render(request, 'webApp/chart2.html')
 
 def last_day_of_month(any_day):
-  next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
-  return next_month - datetime.timedelta(days=next_month.day)
+  next_month = any_day.replace(day=28) + timedelta(days=4)  # this will never fail
+  return next_month - timedelta(days=next_month.day)
 
 def curl_request_addr(address,url):
   ### Code to read token from file ###
@@ -50,12 +49,17 @@ def curl_request_addr(address,url):
 def curl_request(url):
   return curl_request_addr("https://192.168.1.40:9199",url)
 
+def authenticate_user(email):
+  if email in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+    return True
+  else:
+    return False
 
 def admin_attendance(request):
   Access = 0
   api_data = {}
   if request.user and request.user.is_authenticated() :
-    if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+    if authenticate_user(request.user.email.lower()):
       today = date.today()
       first_day = str(today.year)+"-"+str(today.month)+"-01"
       last_day = str(today.year)+"-"+str(today.month)+"-"+str(last_day_of_month(today).day)
@@ -277,7 +281,7 @@ def admin_students(request):
   api_data={}
   Access = 0
   if request.user and request.user.is_authenticated() :
-    if request.user.email.lower() in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+    if authenticate_user(request.user.email.lower()):
       api_data_url = "/ta/get?"
       api_data = curl_request(api_data_url)
       Access = 1
