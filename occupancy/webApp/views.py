@@ -12,6 +12,7 @@ import pycurl
 import json 
 import StringIO
 import os, csv
+import urllib
 
 # Create your views here.
 
@@ -33,7 +34,9 @@ def curl_request_addr(address,url):
   handle = open(file_dir,'r')
   auth_token = handle.readline()
   ### END - Code to read token - END ###
+  url = urllib.quote(url,safe="%/:=&?~#+!$,;'@()*[]")
   api_data_url = address+url+"&token="+auth_token
+  print api_data_url
   c = pycurl.Curl()
   c.setopt(pycurl.URL, api_data_url)
   c.setopt(pycurl.SSL_VERIFYPEER, 0)
@@ -50,7 +53,7 @@ def curl_request(url):
   return curl_request_addr("https://192.168.1.40:9199",url)
 
 def authenticate_user(email):
-  if email in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in"]:
+  if email in ["digvijay09020@iiitd.ac.in","psingh@iiiitd.ac.in","ayush12029@iiitd.ac.in","ashutosh@iiitd.ac.in"]:
     return True
   else:
     return False
@@ -288,6 +291,19 @@ def admin_students(request):
   template = loader.get_template('webApp/admin_students.html');
   context = RequestContext(request,{'request':request, 'user': request.user, 'json':api_data,'access':Access})
   return HttpResponse(template.render(context))
+
+def admin_insert_ta(request):
+  if request.user and request.user.is_authenticated():
+    if authenticate_user(request.user.email.lower()):
+      if request.method=='POST':
+        rollno = request.POST.get('rollno')
+        email = request.POST.get('email')
+        batch = request.POST.get('batch')
+        name = request.POST.get('name')
+        stmt = "/ta/put?rollno="+rollno+"&email="+email+"&batch="+batch+"&name="+name
+        api_data = curl_request(stmt)
+        return HttpResponseRedirect("/template/admin/students/")
+  return HttpResponse("HelloWorld")
 
 def admin_insert(request, ta, mac):
 	test = Admin.objects.filter(TA = ta)
