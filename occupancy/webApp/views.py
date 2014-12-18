@@ -124,18 +124,7 @@ def past_week_data(request,time):
 	while i>0:
 		current_time= current_time + relativedelta(days = 1)
 		url_time=current_time.strftime("%Y-%m-%d-%H:%M:%S")
- 		api_data_url = "https://192.168.1.40:9119/count?at="+url_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr&token="+auth_token
- 		print api_data_url
- 		c = pycurl.Curl()
-		c.setopt(pycurl.URL, api_data_url)
-		c.setopt(pycurl.SSL_VERIFYPEER, 0)
-		c.setopt(pycurl.SSL_VERIFYHOST, 0)
-		b = StringIO.StringIO()
-		c.setopt(pycurl.WRITEFUNCTION, b.write)
-		c.setopt(pycurl.FOLLOWLOCATION, 1)
-		c.setopt(pycurl.MAXREDIRS, 5)
-		c.perform()
-		api_data = b.getvalue()
+		api_data = curl_request_addr("https://192.168.1.40:9119","/count?at=" + url_time + "&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr")
 		api_to_json = json.loads(api_data)
 		# count = 0
 		for j in range(0,int(api_to_json["size"])):
@@ -168,17 +157,7 @@ def past_same_day(request, time):
 	list = []
 	while i>0:
 		url_time=current_time.strftime("%Y-%m-%d-%H:%M:%S")
- 		api_data_url = "https://192.168.1.40:9119/count?at="+url_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr&token="+auth_token
- 		c = pycurl.Curl()
-		c.setopt(pycurl.URL, api_data_url)
-		c.setopt(pycurl.SSL_VERIFYPEER, 0)
-		c.setopt(pycurl.SSL_VERIFYHOST, 0)
-		b = StringIO.StringIO()
-		c.setopt(pycurl.WRITEFUNCTION, b.write)
-		c.setopt(pycurl.FOLLOWLOCATION, 1)
-		c.setopt(pycurl.MAXREDIRS, 5)
-		c.perform()
-		api_data = b.getvalue()
+		api_data = curl_request_addr("https://192.168.1.40:9119","/count?at=" + url_time + "&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr")
 		api_to_json = json.loads(api_data)
 		for j in range(0,int(api_to_json["size"])):
 			dict = {}
@@ -218,19 +197,7 @@ def month_average(request, time):
 		count[0:7] = [0,0,0,0,0,0,0]
 		for j in range(0,2):
 			url_time=temp_time.strftime("%Y-%m-%d-%H:%M:%S")
-	 		api_data_url = "https://192.168.1.40:9119/count?at="+url_time+"&format=yyyy-mm-dd-hh24:mi:ss&type=b&token="+auth_token
-	 		# print api_data_url
-	 		# kl
-	 		c = pycurl.Curl()
-			c.setopt(pycurl.URL, api_data_url)
-			c.setopt(pycurl.SSL_VERIFYPEER, 0)
-			c.setopt(pycurl.SSL_VERIFYHOST, 0)
-			b = StringIO.StringIO()
-			c.setopt(pycurl.WRITEFUNCTION, b.write)
-			c.setopt(pycurl.FOLLOWLOCATION, 1)
-			c.setopt(pycurl.MAXREDIRS, 5)
-			c.perform()
-			api_data = b.getvalue()
+			api_data = curl_request_addr("https://192.168.1.40:9119","/count?at=" + url_time + "&format=yyyy-mm-dd-hh24:mi:ss&type=bfwr")
 			api_to_json = json.loads(api_data)
 			# print api_to_json["occupancy_information"][0]["count"]
 			for k in range(0,int(api_to_json["size"])):
