@@ -271,7 +271,7 @@ def admin_insert_ta(request):
         api_data = curl_request(stmt)
         return HttpResponseRedirect("/template/admin/students/")
   return HttpResponse("HelloWorld")
-
+#Nothing
 def admin_insert(request, ta, mac):
 	test = Admin.objects.filter(TA = ta)
 	if not test:
